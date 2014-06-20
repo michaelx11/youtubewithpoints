@@ -73,6 +73,14 @@ function findUser(id, callback) {
   });
 }
 
+/*
+function createVideo(username, linkName, callback) {
+  root.child('queue').once('value', function(data) {
+    if (data
+  });
+}
+*/
+
 
 exports.createUser = createUser;
 exports.getUser = getUser;

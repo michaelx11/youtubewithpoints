@@ -38,6 +38,7 @@ exports.createUser = function(username, password, passwordconfirm, callback) {
   });
 }
 
-exports.findUser = firebase.findUser;
+exports.submitVideo = function(username, linkName, callback) {
+}
 
-exports.listProblems = firebase.listProblems;
+exports.findUser = firebase.findUser;
