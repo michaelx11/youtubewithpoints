@@ -38,7 +38,10 @@ exports.createUser = function(username, password, passwordconfirm, callback) {
   });
 }
 
-exports.submitVideo = function(username, linkName, callback) {
+exports.submitVideo = function(username, videoName, linkName, callback) {
+  firebase.submitVideo(username, videoName, linkName, function(err, user) {
+    callback(false);
+  });
 }
 
 exports.findUser = firebase.findUser;

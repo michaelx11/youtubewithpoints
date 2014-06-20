@@ -73,15 +73,54 @@ function findUser(id, callback) {
   });
 }
 
-/*
-function createVideo(username, linkName, callback) {
-  root.child('queue').once('value', function(data) {
-    if (data
+function createVideo(owner, videoName, linkName, Id, callback) {
+  root.child('queue').child(Id).set({
+    'link': linkName,
+    'name': videoName,
+    'owner': owner,
+    'strikes' : 0,
+    'likes' : 0
+  });
+  callback(false);
+}
+
+function submitVideo(owner, videoName, linkName, callback) {
+  root.child('counters').child('videoID').transaction(function(videoID) {
+    return videoID + 1;
+  }, function(err, committed, data) {
+    if (err) {
+      callback(err);
+      return;
+    }
+    if (!committed) {
+      callback('System error: create video');
+      return;
+    }
+    var videoID = data.val();
+
+    root.child('queue').once('value', function(data) {
+      queue = data.val().queue;
+      /*
+      var counter = 0;
+      for (var i = 0; i < queue.length; i++) {
+        if (queue[i].owner === owner) {
+          counter++;
+        }
+      }
+      if (counter > 3) {
+        callback("You have too many videos in the queue.");
+      } else {
+      */
+        createVideo(owner, videoName, linkName, videoID, function(error) {
+          callback(false);
+        });
+//      }
+    });
   });
 }
-*/
 
 
 exports.createUser = createUser;
 exports.getUser = getUser;
 exports.findUser = findUser;
+exports.submitVideo = submitVideo;

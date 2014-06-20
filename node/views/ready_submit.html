@@ -12,7 +12,7 @@
                 <a href="/problems">Next Code Golf</a>
             </div>
             <ul class="topnav">
-                <li class="greeting">{{user.username}}</li>
+              <!--                <li class="greeting">{{user.username}}</li>-->
                 <li><a href="/problems">Problems</a></li>
                 <li><a href="/scoreboard">Scoreboard</a></li>
                 <li><a href="/logout">Logout</a></li>
@@ -24,9 +24,9 @@
 
             <div class="left-half code-golf">
                 <h3>Submit Problem</h3>
-                <p>{{{problem.statement}}}</p>
+                <!--                <p>{{{problem.statement}}}</p> -->
                 <form method="post" action="/submit" enctype="multipart/form-data">
-                  <input type="text">
+                  <input type="text" name="link">
                   <!--
                     <p>Problem: <select name="problem">
                         {{#each problems}}
@@ -41,15 +41,19 @@
             <div class="right-half code-golf">
                 <h3>Scoreboard for {{problem.name}}</h3>
                 <ul>
+                  <!--
                     {{#each problemScoreboard}}
                     <li>{{this.username}}: {{this.score}}</li>
                     {{/each}}
+                    -->
                 </ul>
             </div>
         </div>
     </body>
+    <!--
     <script>
         $('#option-{{problem.name}}').attr('selected', 'selected');
     </script>
+    -->
 </html>
 

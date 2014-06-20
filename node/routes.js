@@ -42,6 +42,21 @@ exports.readyRegister = function(req, res) {
   res.render('ready_register.html', {user: req.user});
 }
 
+exports.readySubmit = function(req, res) {
+  var problem = req.query.problem;
+  res.render('ready_submit.html');
+  /*
+  model.listProblems(req.user, function(err, problems) {
+    res.render('ready_submit.html', {
+      user: req.user,
+      problem: problems[problem],
+      problems: problems,
+      problemScoreboard: model.getProblemScoreboard(problem)
+    });
+  });
+  */
+}
+
 exports.register = function(req, res) {
   model.createUser(req.body.username, req.body.password, req.body.passwordconfirm, function(err) {
 
@@ -54,5 +69,21 @@ exports.register = function(req, res) {
 }
 
 exports.submit = function(req, res) {
-  // TODO
+  var link = req.body.link;
+  model.submitVideo(req.user.username, link, link, function(err) {
+    if (err) {
+    } else {
+      res.redirect('/viewer');
+    }
+  });
+  /*
+  model.submitProblem(req.user, req.body.problem, req.files.file, function(err, result) {
+    res.render('submit.html', {
+      user: req.user,
+      problem: req.body.problem,
+      error: err,
+      result: result
+    });
+  });
+  */
 }
