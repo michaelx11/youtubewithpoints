@@ -32,6 +32,7 @@ var http = require('http');
  *     ...
  */
 
+var MAX_DURATION = 750;
 
 function createUser(username, pwHash, callback) {
   root.child('counters').child('userID').transaction(function(userID) {
@@ -97,6 +98,10 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
           var data = bodychunk.data;
           var title = data.title;
           var duration = parseInt(data.duration);
+          if (duration > MAX_DURATION) {
+              callback("Video too long");
+              return;
+          }
 
           root.child('queue').child(Id).set({
               'link': linkName,
@@ -142,8 +147,8 @@ function submitVideo(owner, videoName, linkName, callback) {
     root.child('queue').once('value', function(data) {
       queue = data.val();
       var counter = 0;
-      for (var i = 0; i < queue.length; i++) {
-        if (queue[i].owner === owner) {
+      for (var u in queue) {
+        if (queue[u].owner === owner) {
           counter++;
         }
       }

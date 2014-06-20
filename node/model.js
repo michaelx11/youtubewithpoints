@@ -4,7 +4,8 @@ var bcrypt = require('bcrypt');
 
 var timestamp = 0;
 var LIMIT = 2147483649;
-var BUFFER_TIME = 10 * 1000;
+var BUFFER_TIME = 5 * 1000;
+var TICK_INTERVAL = 5 * 1000;
 
 function initialize() {
     timestamp = (new Date()).getTime();
@@ -36,7 +37,7 @@ function tick() {
     });
 }
 
-setInterval(tick, 5000);
+setInterval(tick, TICK_INTERVAL);
 
 exports.localStrategy = new LocalStrategy(function(username, password, callback) {
   firebase.getUser(username, function(err, user) {
