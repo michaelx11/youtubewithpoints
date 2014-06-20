@@ -8,7 +8,8 @@ var app = express();
 
 // all environments
 
-app.set('port', 80);
+// app.set('port', 80);
+app.set('port', 8080);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
@@ -35,7 +36,20 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.main);
+app.get('/', routes.login);
+app.get('/login', routes.login);
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/problems',
+  failureRedirect: '/login'
+}));
+app.get('/viewer', routes.viewer);
+
+app.get('/logout', routes.logout);
+//app.get('/register', routes.readyRegister);
+app.post('/register', routes.register);
+//app.get('/submit', routes.readySubmit);
+app.post('/submit', routes.submit);
+//app.get('/scoreboard', routes.scoreboard);
 
 http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
