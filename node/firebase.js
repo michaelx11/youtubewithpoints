@@ -32,6 +32,7 @@ var http = require('http');
  *     ...
  */
 
+
 function createUser(username, pwHash, callback) {
   root.child('counters').child('userID').transaction(function(userID) {
     return userID + 1;
@@ -103,11 +104,25 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
               'owner': owner,
               'strikes' : 0,
               'likes' : 0,
-              'duration' : duration
+              'duration' : duration,
+              'id' : Id
           });
           callback(false);
       }
   });
+}
+
+function popQueue(videoObject, callback) {
+    root.child('queue').child(videoObject.id).remove(function() {
+        root.child('archive').child(videoObject.id).set(videoObject);
+        callback(true);
+    });
+}
+
+function getQueue(callback) {
+    root.child('queue').once('value', function(data) {
+        callback(data.val());
+    });
 }
 
 function submitVideo(owner, videoName, linkName, callback) {
@@ -125,8 +140,7 @@ function submitVideo(owner, videoName, linkName, callback) {
     var videoID = data.val();
 
     root.child('queue').once('value', function(data) {
-      queue = data.val().queue;
-      /*
+      queue = data.val();
       var counter = 0;
       for (var i = 0; i < queue.length; i++) {
         if (queue[i].owner === owner) {
@@ -136,11 +150,10 @@ function submitVideo(owner, videoName, linkName, callback) {
       if (counter > 3) {
         callback("You have too many videos in the queue.");
       } else {
-      */
         createVideo(owner, videoName, linkName, videoID, function(error) {
           callback(false);
         });
-//      }
+      }
     });
   });
 }
@@ -150,3 +163,5 @@ exports.createUser = createUser;
 exports.getUser = getUser;
 exports.findUser = findUser;
 exports.submitVideo = submitVideo;
+exports.getQueue = getQueue;
+exports.popQueue = popQueue;

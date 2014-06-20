@@ -2,6 +2,42 @@ var firebase = require('./firebase');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
+var timestamp = 0;
+var LIMIT = 2147483649;
+var BUFFER_TIME = 10 * 1000;
+
+function initialize() {
+    timestamp = (new Date()).getTime();
+}
+initialize();
+
+function tick() {
+    firebase.getQueue(function (queue) {
+        var min = LIMIT;
+        var minVideo = {};
+        for (var u in queue) {
+            var videoObj = queue[u];
+            if (videoObj.id < min) {
+                minVideo = videoObj;
+                min = videoObj.id;
+            }
+        }
+
+        var time = (new Date()).getTime();
+        var duration = minVideo.duration * 1000;
+        // exceeds time limit
+        if (time > duration + timestamp + BUFFER_TIME) {
+            // remove the oldest video
+            firebase.popQueue(minVideo, function (error) {
+                // get new timestamp
+                timestamp = (new Date()).getTime();
+            });
+        }
+    });
+}
+
+setInterval(tick, 5000);
+
 exports.localStrategy = new LocalStrategy(function(username, password, callback) {
   firebase.getUser(username, function(err, user) {
     if (user) {
