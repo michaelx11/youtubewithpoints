@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>Next Code Golf Problems</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/reset.css">
+        <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <a href="/problems"><span class="circle">NC</span></a>
+            <div class="appname">
+                <a href="/problems">Next Code Golf</a>
+            </div>
+            <ul class="topnav">
+                <li class="greeting">{{user.username}}</li>
+                <li><a href="/problems">Problems</a></li>
+                <li><a href="/scoreboard">Scoreboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+            <div class="prettybar"></div>
+        </div>
+        <div class="content">
+            <h1>Next Code Golf Rules</h1>
+    
+            <div class="code-golf">
+                <p>There will be ten problems. The competition will last 60 minutes. Contestants need to bring their own laptops.</p>
+
+                <p>Submit solutions to the problems in Python. The solutions will be tested on various judge inputs. Correct solutions will be scored by the number of non-whitespace characters in the solution. In order to deter from one-letter variable names and encourage the use of library functions, all identifiers will count as only one character each. Obviously, the lowest score wins. </p>
+
+                <p>Specifically, we remove all whitespace (spaces, tabs, newlines) and collapse all contiguous substrings of alphanumeric characters (A-Z, a-z, and underscore) into one character, unless they are in strings. For example:</p>
+                <ul>
+                    <li><b>print 'hi'</b>: 5 (one for print, and four for the string 'hi')</li>
+                    <li><b>s.replace(' ', '')</b>: 11 (the space after the comma is not counted, but the space in the string is)</li>
+                </ul>
+
+                <p>Important: file operations, network operations, and eval() functions (as well as other "bad" functions) are NOT allowed.</p>
+
+                <p>For each problem, the top scorers are awarded "global points" in Mario Kart style. The person with rank r is given n points. Ties are broken by time submitted.</p>
+                <table>
+                    <tr><th>r</th><th>n</th></tr>
+                    <tr><td>1</td><td>15</td></tr>
+                    <tr><td>2</td><td>12</td></tr>
+                    <tr><td>3</td><td>10</td></tr>
+                    <tr><td>4</td><td>8</td></tr>
+                    <tr><td>5</td><td>7</td></tr>
+                    <tr><td>6</td><td>6</td></tr>
+                    <tr><td>7</td><td>5</td></tr>
+                    <tr><td>8</td><td>4</td></tr>
+                    <tr><td>9</td><td>3</td></tr>
+                    <tr><td>10</td><td>2</td></tr>
+                    <tr><td>11</td><td>1</td></tr>
+                </table>
+                <br/>
+                <p>The person with the most global points wins the Next Code Golf competition!</p>
+            </div>
+        </div>
+    </body>
+</html>

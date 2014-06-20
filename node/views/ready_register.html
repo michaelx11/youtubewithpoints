@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Next Code Golf Signup</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/reset.css">
+        <link rel="stylesheet" type="text/css" href="stylesheets/login.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header"><span class="circle">NC</span></div>
+            <form method="post" action="/register">
+                <h1>Next Code Golf Signup</h1>
+                {{#if error}}
+                <p class="error">{{error}}</p>
+                {{/if}}
+                <p>Username: <input type="text" class="username" name="username"></p>
+                <p>Password: <input type="password" name="password"></p>
+                <p>Re-enter Password: <input type="password" name="passwordconfirm"></p>
+                <input type="submit" value="register">
+            </form>
+            <p><a href="/rules">Rules</a></p>
+        </div>
+        <script>
+            $(".username").focus();
+        </script>
+    </body>
+</html>
+

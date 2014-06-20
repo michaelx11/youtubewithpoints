@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Next Code Golf Scoreboard</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/reset.css">
+        <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <a href="/problems"><span class="circle">NC</span></a>
+            <div class="appname">
+                <a href="/problems">Next Code Golf</a>
+            </div>
+            <ul class="topnav">
+                <li class="greeting">{{user.username}}</li>
+                <li><a href="/problems">Problems</a></li>
+                <li><a href="/scoreboard">Scoreboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+            <div class="prettybar"></div>
+        </div>
+        <div class="content">
+            <h1>Next Code Golf Scoreboard</h1>
+
+            <ul>
+            {{#each globalScoreboard}}
+            <li>{{this.username}}: {{this.score}}</li>
+            {{/each}}
+            </ul>
+        </div>
+    </body>
+</html>
+

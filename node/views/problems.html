@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Next Code Golf Problems</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/reset.css">
+        <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <a href="/problems"><span class="circle">NC</span></a>
+            <div class="appname">
+                <a href="/problems">Next Code Golf</a>
+            </div>
+            <ul class="topnav">
+                <li class="greeting">{{user.username}}</li>
+                <li><a href="/problems">Problems</a></li>
+                <li><a href="/scoreboard">Scoreboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+            <div class="prettybar"></div>
+        </div>
+        <div class="content">
+            <h1>Next Code Golf Problems</h1>
+    
+            <div class="left-half code-golf">
+                <h3>Algorithmic Problems</h3>
+                {{#each algProblems}}
+                <p>
+                <span><a href="/submit?problem={{this.name}}">{{this.name}}</a></span>
+                <span class="score-{{this.score}}">Score: {{this.score}}</span>
+                </p>
+                {{/each}}
+            </div>
+            <div class="right-half code-golf">
+                <h3>Example Problems</h3>
+                {{#each chalProblems}}
+                <p>
+                <span><a href="/submit?problem={{this.name}}">{{this.name}}</a></span>
+                <span class="score-{{this.score}}">Score: {{this.score}}</span>
+                </p>
+                {{/each}}
+            </div>
+        </div>
+    </body>
+    <script>
+        $('.score-unsolved').remove();
+    </script>
+</html>
