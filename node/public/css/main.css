@@ -34,7 +34,7 @@ h2 {
 }
 
 .playlist-container {
-  width: 400px;
+  width: 500px;
   margin: 0 auto;
   text-align: left;
 }
@@ -65,4 +65,8 @@ h2 {
   margin-right: 30px;
   text-align: right;
   width: 50px;
+}
+
+#ytplayer {
+  /* display: none; */
 }
