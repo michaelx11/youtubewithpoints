@@ -2,6 +2,7 @@
 
 var Firebase = require('firebase');
 var root = new Firebase('https://youtubewithpoints.firebaseIO.com');
+var http = require('http');
 
 /*
  * Schema
@@ -73,15 +74,40 @@ function findUser(id, callback) {
   });
 }
 
-function createVideo(owner, videoName, linkName, Id, callback) {
-  root.child('queue').child(Id).set({
-    'link': linkName,
-    'name': videoName,
-    'owner': owner,
-    'strikes' : 0,
-    'likes' : 0
+function getVideoData(linkName, callback) {
+    var id = linkName.split("/").pop();
+    http.get(
+    "http://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=jsonc",
+    function(res) {
+        res.on("data", function(chunk) {
+            callback(false, chunk.toString("utf8"));
+        });
+    }).on('error', function(e) {
+        callback("Error: " + e.message, "");
+    });
+}
+
+function createVideo(owner, defaultVideoName, linkName, Id, callback) {
+  getVideoData(linkName, function (error, chunk) {
+      if (error) {
+          callback(error);
+      } else {
+          var bodychunk = JSON.parse(chunk);
+          var data = bodychunk.data;
+          var title = data.title;
+          var duration = parseInt(data.duration);
+
+          root.child('queue').child(Id).set({
+              'link': linkName,
+              'name': title,
+              'owner': owner,
+              'strikes' : 0,
+              'likes' : 0,
+              'duration' : duration
+          });
+          callback(false);
+      }
   });
-  callback(false);
 }
 
 function submitVideo(owner, videoName, linkName, callback) {
