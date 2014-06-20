@@ -39,7 +39,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.login);
 app.get('/login', routes.login);
 app.post('/login', passport.authenticate('local', {
-  successRedirect: '/problems',
+  successRedirect: '/viewer',
   failureRedirect: '/login'
 }));
 app.get('/viewer', routes.viewer);
