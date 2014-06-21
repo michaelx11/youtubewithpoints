@@ -2,6 +2,7 @@
 
 var Firebase = require('firebase');
 var root = new Firebase('https://youtubewithpoints.firebaseIO.com');
+root.auth('XBpA1D5RWfRNh9QSfIaqNQrNi91QZjMVVjFX2ltj');
 var http = require('http');
 
 /*
@@ -91,7 +92,6 @@ function getVideoData(linkName, callback) {
         });
         res.on("end", function() {
           callback(false, output);
-          return;
         });
       }).on('error', function(e) {
         callback("Error: " + e.message, "");
@@ -160,6 +160,12 @@ function popQueue(videoObject, strikeOut, callback) {
 
 function getQueue(callback) {
   root.child('queue').once('value', function(data) {
+    callback(data.val());
+  });
+}
+
+function getArchive(callback) {
+  root.child('archive').once('value', function(data) {
     callback(data.val());
   });
 }
@@ -272,6 +278,7 @@ exports.getUser = getUser;
 exports.findUser = findUser;
 exports.submitVideo = submitVideo;
 exports.getQueue = getQueue;
+exports.getArchive = getArchive;
 exports.popQueue = popQueue;
 exports.getHead = getHead;
 exports.like = like;

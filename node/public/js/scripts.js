@@ -26,8 +26,8 @@ $(document).ready(function(){
     });
   });
   
-  dataRef.on('value', function(snapshot) {
-    var queue = snapshot.val().queue;
+  dataRef.child('queue').on('value', function(snapshot) {
+    var queue = snapshot.val();
     var html = '';
     var counter = 0;
     var playing = '&#9658;';
@@ -58,8 +58,8 @@ $(document).ready(function(){
         var url = '/time';
         playingVideoLink = video.link;
         $.get(url, function(data){
-          console.log(playingVideoLink);
           playingVideo = playingVideoLink + '?autoplay=1&' + data;
+          console.log(playingVideo);
           $('#ytplayer').attr('src',playingVideo);
         })
       }

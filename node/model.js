@@ -2,9 +2,12 @@ var firebase = require('./firebase');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
+var LONELY_BOT = "LonelyBot";
+
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
 var TICK_INTERVAL = 5 * 1000;
+var LONELY_INTERVAL = 10 * 1000;
 
 function initialize() {
   timestamp = (new Date()).getTime();
@@ -13,7 +16,7 @@ initialize();
 
 function tick() {
   firebase.getHead(function (error, minVideo) {
-    if (error) {
+    if (!error) {
       // strike out
       if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
         firebase.popQueue(minVideo, true, function (error) {
@@ -40,7 +43,21 @@ function tick() {
   });
 }
 
+function lonelyBot() {
+  firebase.getQueue(function (queue) {
+    if (!queue) {
+      firebase.getArchive(function (archive) {
+        var keys = Object.keys(archive);
+        var sample = Math.ceil(Math.random() * keys.length);
+        var randomVideo = archive[keys[sample]];
+        exports.submitVideo(LONELY_BOT, randomVideo.name, randomVideo.link, function(err) {});
+      });
+    }
+  });
+}
+
 setInterval(tick, TICK_INTERVAL);
+setInterval(lonelyBot, LONELY_INTERVAL);
 
 exports.localStrategy = new LocalStrategy(function(username, password, callback) {
   firebase.getUser(username, function(err, user) {
@@ -79,13 +96,21 @@ exports.createUser = function(username, password, passwordconfirm, callback) {
 }
 
 exports.submitVideo = function(username, videoName, linkName, callback) {
-  var regexp = /v=(\w+)/;
-  var match = regexp.exec(linkName);
-  if (match.length < 2) {
-    callback("Invalid URL");
+  if (linkName.length == 0) {
+    callback('Empty Url.');
     return;
   }
-  var constructedLink = "http://www.youtube.com/embed/" + match[1];
+
+  var regexp = /v=([\w-]+)/;
+  var match = regexp.exec(linkName);
+  var idChunk = '';
+  if ((!match) || match.length < 2) {
+    var idChunk = linkName.split('/').pop();
+// TODO: extra url checks
+  } else {
+    idChunk = match[1];
+  }
+  var constructedLink = "http://www.youtube.com/embed/" + idChunk;
   firebase.submitVideo(username, videoName, constructedLink, function(err, user) {
     callback(false);
   });
