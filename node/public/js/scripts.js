@@ -2,6 +2,19 @@ $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
   var dataRef = new Firebase('https://youtubewithpoints.firebaseio.com/');
+  
+  $('.submit-footer-btn').on('click', function(){
+    var youtubeLink = $('.url-input').val();
+    var url = '/submit';
+    var data = {link: youtubeLink};
+    $.post(url, data, function(e) {
+      $('.url-input').fadeOut(function() {
+        $('.url-input').val('');
+        $('.url-input').fadeIn();
+      });
+    });
+  });
+  
   dataRef.on('value', function(snapshot) {
     var queue = snapshot.val().queue;
     var html = '';
