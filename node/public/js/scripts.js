@@ -2,7 +2,7 @@ $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
   var dataRef = new Firebase('https://youtubewithpoints.firebaseio.com/');
-  
+  var strikeWords = ['nope', 'doubly nope', 'goodbye'];
   $('.submit-footer-btn').on('click', function(){
     var youtubeLink = $('.url-input').val();
     var url = '/submit';
@@ -32,22 +32,26 @@ $(document).ready(function(){
     for (i in queue) {
       var id = i;
       var video = queue[i];
+      if (video.strikes === 0) {
+        video.strikes = {};
+      }
+      var strikes = Object.keys(video.strikes).length;
+      console.log(strikes);
+      
+      var strikeWord = strikeWords[strikes];
       html += '<div class="playlist-item">';
       html += '<div class="isplaying">' + playing + '</div> ';
       html += '<div class="uploader">' + video.owner + '</div> ';
-      html += '<div class="title">' + video.name + '<span class="strike ' + id + '">nope</span></div> ';
+      html += '<div class="title">' + video.name + '<span class="strike ' + id + '">' + strikeWord + '</span></div> ';
       html += '</div>';
       playing = '';
-      
-      // currently in: PLAY WHATEVER COMES UP MODE
-      // add counter == 0 back to play normal mode, right after the second ( of 
-      // the following line
-      if (playingVideo == '' || (counter == 0 && playingVideoLink != video.link)) {
+
+      if (playingVideoLink == '' || (counter == 0 && playingVideoLink != video.link)) {
         var url = '/time';
+        var playingVideoLink = video.link;
         $.get(url, function(data){
-          playingVideoLink = video.link;
-          playingVideo = video.link + '?autoplay=1&' + data;
-          console.log(playingVideo);
+          console.log(playingVideoLink);
+          playingVideo = playingVideoLink + '?autoplay=1&' + data;
           $('#ytplayer').attr('src',playingVideo);
         })
       }
