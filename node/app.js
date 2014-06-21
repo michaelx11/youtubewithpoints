@@ -3,13 +3,16 @@ var http = require('http');
 var passport = require('passport');
 var hbs = require('hbs');
 var routes = require('./routes');
+var firebase = require('./firebase');
+var authConfig = require('./authConfig');
+var FacebookStrategy = require("passport-facebook").Strategy;
 
 var app = express();
 
 // all environments
 
-// app.set('port', 80);
-app.set('port', 8080);
+app.set('port', 80);
+// app.set('port', 8080);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
@@ -27,21 +30,49 @@ app.use(passport.session());
 app.use(routes.initialRouter);
 app.use(app.router);
 
+passport.use(new FacebookStrategy({
+    clientID: authConfig.clientID,
+    clientSecret: authConfig.clientSecret,
+    callbackURL: authConfig.callbackURL
+  },
+  function(accessToken, refreshToken, profile, done) {
+    firebase.createUserFb(profile.displayName, profile.id, function(error, user) {
+      if (error) {
+        return done(error);
+      }
+      done(null, user);
+    });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+
+/*
 passport.use(routes.localStrategy);
 passport.serializeUser(function(user, done) { done(null, user.id) });
 passport.deserializeUser(routes.findUser);
+*/
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.login);
+app.get('/', routes.viewer);
 app.get('/login', routes.login);
+/*
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/viewer',
   failureRedirect: '/login'
 }));
+*/
 app.get('/viewer', routes.viewer);
 
 app.get('/logout', routes.logout);
@@ -52,7 +83,10 @@ app.post('/submit', routes.submit);
 app.post('/like', routes.like);
 app.post('/strike', routes.strike);
 app.get('/time', routes.time);
-//app.get('/scoreboard', routes.scoreboard);
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { successRedirect: '/viewer',
+      failureRedirect: '/login' }))
 
 http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));

@@ -13,6 +13,7 @@
     "passport": "*",
     "passport-local": "*",
     "bcrypt": "*",
-    "request": "*"
+    "request": "*",
+    "passport-facebook": "*"
   }
 }

@@ -1,7 +1,7 @@
 var model = require('./model');
 
 exports.initialRouter = function(req, res, next) {
-  if (req.url === '/login' || req.url === '/register') {
+  if (req.url === '/login' || req.url === '/register' || (req.url.lastIndexOf('/auth/facebook', 0) === 0)) {
     next();
   } else if (req.user) {
     console.log(req.user.username + " " + req.url);

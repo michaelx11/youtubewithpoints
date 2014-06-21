@@ -1,8 +1,9 @@
 /* Functions that interact with Firebase */
 
 var Firebase = require('firebase');
+var authConfig = require('./authConfig');
 var root = new Firebase('https://youtubewithpoints.firebaseIO.com');
-root.auth('XBpA1D5RWfRNh9QSfIaqNQrNi91QZjMVVjFX2ltj');
+root.auth(authConfig.firebaseSecret);
 var http = require('http');
 
 /*
@@ -36,6 +37,17 @@ var http = require('http');
 var LIMIT = 2147483649;
 var MAX_DURATION = 750;
 var RATE_LIMIT = 10;
+
+function createUserFb(username, id, callback) {
+  var user = {
+    'id' : id,
+    'username' : username,
+    'score' : 0
+  };
+
+  root.child('users').child(id).set(user);
+  callback(false, user);
+}
 
 function createUser(username, pwHash, callback) {
   root.child('counters').child('userID').transaction(function(userID) {
@@ -273,6 +285,7 @@ function getStrikes(minVideo, callback) {
   });
 }
 
+exports.createUserFb = createUserFb;
 exports.createUser = createUser;
 exports.getUser = getUser;
 exports.findUser = findUser;
