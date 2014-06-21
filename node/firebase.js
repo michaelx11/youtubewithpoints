@@ -97,7 +97,13 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
     if (error) {
       callback(error);
     } else {
-      var bodychunk = JSON.parse(chunk);
+      var bodychunk = "";
+      try {
+        bodychunk = JSON.parse(chunk);
+      } catch (e) {
+        callback('Parser error, try again!');
+        return;
+      }
       var data = bodychunk.data;
       var title = data.title;
       var duration = parseInt(data.duration);
