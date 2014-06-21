@@ -79,8 +79,59 @@ h2 {
   width: 100%;
   position: fixed;
   bottom: 0px;
-  height: 30px;
   background-color: #00c2ad;
+}
+
+.submit-footer-content {
+  width: 700px;
+  margin: 0 auto;
+}
+
+.submit-footer-btn {
+  float: right;
+  color: #b0ebe5;
+  font-size: 30px;
+  padding: 5px;
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 300;
+  background-color: inherit;
+  border: none;
+  outline: none;
+}
+
+.submit-footer-btn:hover {
+  cursor: pointer;
+  color: #fff;
+}
+
+.url-input {
+  outline: none;
+  border: none;
+  border-radius: 2px;
+  padding: 5px 8px;
+  font-family: 'Muli', sans-serif;
+  font-size: 14px;
+  margin: 10px;
+  background-color: #2fd2c0;
+  color: #fff;
+  float: left;
+  width: 550px;
+}
+
+::-webkit-input-placeholder {
+   color: #fff;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: #fff;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #fff;  
+}
+
+:-ms-input-placeholder {  
+   color: #fff;  
 }
 
 #ytplayer {
