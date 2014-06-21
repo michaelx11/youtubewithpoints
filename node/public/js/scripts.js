@@ -43,13 +43,13 @@ $(document).ready(function(){
       // add counter == 0 back to play normal mode, right after the second ( of 
       // the following line
       if (playingVideo == '' || (counter == 0 && playingVideoLink != video.link)) {
-        playingVideoLink = video.link;
-        playingVideo = video.link + '?autoplay=1';
         var url = '/time';
-        $.get(url function(data){
-          console.log(data);
+        $.get(url, function(data){
+          playingVideoLink = video.link;
+          playingVideo = video.link + '?autoplay=1&' + data;
+          console.log(playingVideo);
+          $('#ytplayer').attr('src',playingVideo);
         })
-        $('#ytplayer').attr('src',playingVideo);
       }
       
       counter ++;

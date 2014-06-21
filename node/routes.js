@@ -58,7 +58,7 @@ exports.readySubmit = function(req, res) {
 }
 
 exports.time = function(req, res) {
-  var timeIntoSong = "t=" + Math.round(model.getTime());
+  var timeIntoSong = "start=" + Math.round(model.getTime());
   res.writeHead(200, {
   'Content-Length': timeIntoSong.length,
   'Content-Type': 'text/plain' })
