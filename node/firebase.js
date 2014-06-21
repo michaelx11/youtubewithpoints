@@ -131,6 +131,9 @@ function popQueue(videoObject, strikeOut, callback) {
           callback(false);
         });
       } else {
+        if (videoObject.likes === 0) {
+          videoObject.likes = {};
+        }
         root.child('users').child(owner.id).child('score').transaction(function(score) {
           return score + Object.keys(videoObject.likes).length + 1;
         }, function(error, committed, snapshot) {

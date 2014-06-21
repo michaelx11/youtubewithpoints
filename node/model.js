@@ -77,7 +77,14 @@ exports.createUser = function(username, password, passwordconfirm, callback) {
 }
 
 exports.submitVideo = function(username, videoName, linkName, callback) {
-  firebase.submitVideo(username, videoName, linkName, function(err, user) {
+  var regexp = /v=(\w+)/;
+  var match = regexp.exec(linkName);
+  if (match.length < 2) {
+    callback("Invalid URL");
+    return;
+  }
+  var constructedLink = "http://www.youtube.com/embed/" + match[1];
+  firebase.submitVideo(username, videoName, constructedLink, function(err, user) {
     callback(false);
   });
 }
