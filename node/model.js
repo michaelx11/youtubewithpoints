@@ -95,8 +95,8 @@ exports.like = function(username, callback) {
   });
 }
 
-exports.strike = function(username, callback) {
-  firebase.strike(username, function(error) {
+exports.strike = function(username, songId, callback) {
+  firebase.strike(username, songId, function(error) {
     callback(error);
   });
 }

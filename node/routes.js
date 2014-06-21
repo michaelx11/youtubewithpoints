@@ -90,7 +90,7 @@ exports.like = function(req, res) {
 }
 
 exports.strike = function(req, res) {
-  model.strike(req.user.username, function(err) {
+  model.strike(req.user.username, req.body.songId, function(err) {
     res.redirect('/viewer');
   });
 }

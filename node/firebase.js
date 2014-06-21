@@ -86,6 +86,7 @@ function getVideoData(linkName, callback) {
       function(res) {
         res.on("data", function(chunk) {
           callback(false, chunk.toString("utf8"));
+          return;
         });
       }).on('error', function(e) {
         callback("Error: " + e.message, "");
@@ -214,10 +215,14 @@ function like(username, callback) {
   });
 }
 
-function strike(username, callback) {
-  getHead(function(minVideo) {
-    root.child('queue/' + minVideo.id + '/strikes').child(username).set('striked');
-    callback(false);
+function strike(username, songId, callback) {
+  root.child('queue').child(songId).on('value', function(data) {
+    if (data) {
+      root.child('queue').child(songId).child('strikes/' + username).set('striked');
+      callback(false);
+    } else {
+      callback('Song does not exist.');
+    }
   });
 }
 
