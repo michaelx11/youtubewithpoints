@@ -49,6 +49,8 @@ app.get('/register', routes.readyRegister);
 app.post('/register', routes.register);
 app.get('/submit', routes.readySubmit);
 app.post('/submit', routes.submit);
+app.post('/like', routes.like);
+app.post('/strike', routes.strike);
 //app.get('/scoreboard', routes.scoreboard);
 
 http.createServer(app).listen(app.get('port'), function() {

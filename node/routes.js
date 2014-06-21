@@ -46,20 +46,19 @@ exports.readySubmit = function(req, res) {
   var problem = req.query.problem;
   res.render('ready_submit.html');
   /*
-  model.listProblems(req.user, function(err, problems) {
-    res.render('ready_submit.html', {
-      user: req.user,
-      problem: problems[problem],
-      problems: problems,
-      problemScoreboard: model.getProblemScoreboard(problem)
-    });
-  });
-  */
+     model.listProblems(req.user, function(err, problems) {
+     res.render('ready_submit.html', {
+     user: req.user,
+     problem: problems[problem],
+     problems: problems,
+     problemScoreboard: model.getProblemScoreboard(problem)
+     });
+     });
+     */
 }
 
 exports.register = function(req, res) {
   model.createUser(req.body.username, req.body.password, req.body.passwordconfirm, function(err) {
-
     if (err) {
       res.render('ready_register.html', {user: req.user, error: err});
     } else {
@@ -76,14 +75,16 @@ exports.submit = function(req, res) {
       res.redirect('/viewer');
     }
   });
-  /*
-  model.submitProblem(req.user, req.body.problem, req.files.file, function(err, result) {
-    res.render('submit.html', {
-      user: req.user,
-      problem: req.body.problem,
-      error: err,
-      result: result
-    });
+}
+
+exports.like = function(req, res) {
+  model.like(req.user.username, function(err) {
+    res.redirect('/viewer');
   });
-  */
+}
+
+exports.strike = function(req, res) {
+  model.strike(req.user.username, function(err) {
+    res.redirect('/viewer');
+  });
 }

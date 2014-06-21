@@ -3,38 +3,39 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
 var timestamp = 0;
-var LIMIT = 2147483649;
 var BUFFER_TIME = 5 * 1000;
 var TICK_INTERVAL = 5 * 1000;
 
 function initialize() {
-    timestamp = (new Date()).getTime();
+  timestamp = (new Date()).getTime();
 }
 initialize();
 
 function tick() {
-    firebase.getQueue(function (queue) {
-        var min = LIMIT;
-        var minVideo = {};
-        for (var u in queue) {
-            var videoObj = queue[u];
-            if (videoObj.id < min) {
-                minVideo = videoObj;
-                min = videoObj.id;
-            }
+  firebase.getHead(function (minVideo) {
+    // strike out
+    if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
+      firebase.popQueue(minVideo, true, function (error) {
+        if (!error) {
+          // get new timestamp
+          timestamp = (new Date()).getTime();
         }
-
-        var time = (new Date()).getTime();
-        var duration = minVideo.duration * 1000;
-        // exceeds time limit
-        if (time > duration + timestamp + BUFFER_TIME) {
-            // remove the oldest video
-            firebase.popQueue(minVideo, function (error) {
-                // get new timestamp
-                timestamp = (new Date()).getTime();
-            });
-        }
-    });
+      });
+    } else { // expire naturally
+      var time = (new Date()).getTime();
+      var duration = minVideo.duration * 1000;
+      // exceeds time limit
+      if (time > duration + timestamp + BUFFER_TIME) {
+        // remove the oldest video
+        firebase.popQueue(minVideo, false, function (error) {
+          if (!error) {
+            // get new timestamp
+            timestamp = (new Date()).getTime();
+          }
+        });
+      }
+    }
+  });
 }
 
 setInterval(tick, TICK_INTERVAL);
@@ -78,6 +79,30 @@ exports.createUser = function(username, password, passwordconfirm, callback) {
 exports.submitVideo = function(username, videoName, linkName, callback) {
   firebase.submitVideo(username, videoName, linkName, function(err, user) {
     callback(false);
+  });
+}
+
+exports.like = function(username, callback) {
+  firebase.like(username, function(error) {
+    callback(error);
+  });
+}
+
+exports.strike = function(username, callback) {
+  firebase.strike(username, function(error) {
+    callback(error);
+  });
+}
+
+exports.getLikes = function(username, callback) {
+  firebase.getLikes(username, function(error, numLikes) {
+    callback(error, numLikes);
+  });
+}
+
+exports.getStrikes = function(username, callback) {
+  firebase.getStrikes(username, function(error, numStrikes) {
+    callback(error, numStrikes);
   });
 }
 

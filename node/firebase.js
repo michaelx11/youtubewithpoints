@@ -32,6 +32,7 @@ var http = require('http');
  *     ...
  */
 
+var LIMIT = 2147483649;
 var MAX_DURATION = 750;
 
 function createUser(username, pwHash, callback) {
@@ -50,7 +51,8 @@ function createUser(username, pwHash, callback) {
     root.child('users').child(userID).set({
       'id': userID,
       'username': username,
-      'pwHash': pwHash
+      'pwHash': pwHash,
+      'score' : 0
     });
     callback(false);
   });
@@ -77,57 +79,89 @@ function findUser(id, callback) {
 }
 
 function getVideoData(linkName, callback) {
-    var id = linkName.split("/").pop();
-    http.get(
-    "http://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=jsonc",
-    function(res) {
+  var id = linkName.split("/").pop();
+  http.get(
+      "http://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=jsonc",
+      function(res) {
         res.on("data", function(chunk) {
-            callback(false, chunk.toString("utf8"));
+          callback(false, chunk.toString("utf8"));
         });
-    }).on('error', function(e) {
+      }).on('error', function(e) {
         callback("Error: " + e.message, "");
-    });
+      });
 }
 
 function createVideo(owner, defaultVideoName, linkName, Id, callback) {
   getVideoData(linkName, function (error, chunk) {
-      if (error) {
-          callback(error);
-      } else {
-          var bodychunk = JSON.parse(chunk);
-          var data = bodychunk.data;
-          var title = data.title;
-          var duration = parseInt(data.duration);
-          if (duration > MAX_DURATION) {
-              callback("Video too long");
-              return;
-          }
-
-          root.child('queue').child(Id).set({
-              'link': linkName,
-              'name': title,
-              'owner': owner,
-              'strikes' : 0,
-              'likes' : 0,
-              'duration' : duration,
-              'id' : Id
-          });
-          callback(false);
+    if (error) {
+      callback(error);
+    } else {
+      var bodychunk = JSON.parse(chunk);
+      var data = bodychunk.data;
+      var title = data.title;
+      var duration = parseInt(data.duration);
+      if (duration > MAX_DURATION) {
+        callback("Video too long");
+        return;
       }
+
+      root.child('queue').child(Id).set({
+        'link': linkName,
+        'name': title,
+        'owner': owner,
+        'strikes' : 0,
+        'likes' : 0,
+        'duration' : duration,
+        'id' : Id
+      });
+      callback(false);
+    }
   });
 }
 
-function popQueue(videoObject, callback) {
-    root.child('queue').child(videoObject.id).remove(function() {
-        root.child('archive').child(videoObject.id).set(videoObject);
-        callback(true);
+function popQueue(videoObject, strikeOut, callback) {
+  root.child('queue').child(videoObject.id).remove(function() {
+    root.child('archive').child(videoObject.id).set(videoObject);
+    getUser(videoObject.owner, function(error, owner) {
+      if (strikeOut) {
+        root.child('users').child(owner.id).child('score').transaction(function(score) {
+          return score - 1;
+        }, function(error, committed, snapshot) {
+          // fail silently
+          callback(false);
+        });
+      } else {
+        root.child('users').child(owner.id).child('score').transaction(function(score) {
+          return score + Object.keys(videoObject.likes).length + 1;
+        }, function(error, committed, snapshot) {
+          // fail silently
+          callback(false);
+        });
+      }
     });
+  });
 }
 
 function getQueue(callback) {
-    root.child('queue').once('value', function(data) {
-        callback(data.val());
-    });
+  root.child('queue').once('value', function(data) {
+    callback(data.val());
+  });
+}
+
+function getHead(callback) {
+  root.child('queue').once('value', function(data) {
+    var queue = data.val();
+    var min = LIMIT;
+    var minVideo = {};
+    for (var u in queue) {
+      var videoObj = queue[u];
+      if (videoObj.id < min) {
+        minVideo = videoObj;
+        min = videoObj.id;
+      }
+    }
+    callback(minVideo);
+  });
 }
 
 function submitVideo(owner, videoName, linkName, callback) {
@@ -163,6 +197,47 @@ function submitVideo(owner, videoName, linkName, callback) {
   });
 }
 
+function like(username, callback) {
+  getHead(function(minVideo) {
+    root.child('queue/' + minVideo.id + '/likes').child(username).set('liked');
+    callback(false);
+  });
+}
+
+function strike(username, callback) {
+  getHead(function(minVideo) {
+    root.child('queue/' + minVideo.id + '/strikes').child(username).set('striked');
+    callback(false);
+  });
+}
+
+function getLikes(minVideo, callback) {
+  getQueue(function(queue) {
+    if (minVideo.id in queue) {
+      if (!(minVideo.likes === 0)) {
+        callback(false, Object.keys(minVideo.likes).length);
+      } else {
+        callback(false, 0);
+      }
+    } else {
+      callback("Liked video is no longer in the queue.", 0);
+    }
+  });
+}
+
+function getStrikes(minVideo, callback) {
+  getQueue(function(queue) {
+    if (minVideo.id in queue) {
+      if (!(minVideo.strikes === 0)) {
+        callback(false, Object.keys(minVideo.strikes).length);
+      } else {
+        callback(false, 0);
+      }
+    } else {
+      callback("Striked video is no longer in the queue.", 0);
+    }
+  });
+}
 
 exports.createUser = createUser;
 exports.getUser = getUser;
@@ -170,3 +245,8 @@ exports.findUser = findUser;
 exports.submitVideo = submitVideo;
 exports.getQueue = getQueue;
 exports.popQueue = popQueue;
+exports.getHead = getHead;
+exports.like = like;
+exports.strike = strike;
+exports.getLikes = getLikes;
+exports.getStrikes = getStrikes;
