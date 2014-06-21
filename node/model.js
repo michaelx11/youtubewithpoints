@@ -12,27 +12,29 @@ function initialize() {
 initialize();
 
 function tick() {
-  firebase.getHead(function (minVideo) {
-    // strike out
-    if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
-      firebase.popQueue(minVideo, true, function (error) {
-        if (!error) {
-          // get new timestamp
-          timestamp = (new Date()).getTime();
-        }
-      });
-    } else { // expire naturally
-      var time = (new Date()).getTime();
-      var duration = minVideo.duration * 1000;
-      // exceeds time limit
-      if (time > duration + timestamp + BUFFER_TIME) {
-        // remove the oldest video
-        firebase.popQueue(minVideo, false, function (error) {
+  firebase.getHead(function (error, minVideo) {
+    if (error) {
+      // strike out
+      if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
+        firebase.popQueue(minVideo, true, function (error) {
           if (!error) {
             // get new timestamp
             timestamp = (new Date()).getTime();
           }
         });
+      } else { // expire naturally
+        var time = (new Date()).getTime();
+        var duration = minVideo.duration * 1000;
+        // exceeds time limit
+        if (time > duration + timestamp + BUFFER_TIME) {
+          // remove the oldest video
+          firebase.popQueue(minVideo, false, function (error) {
+            if (!error) {
+              // get new timestamp
+              timestamp = (new Date()).getTime();
+            }
+          });
+        }
       }
     }
   });

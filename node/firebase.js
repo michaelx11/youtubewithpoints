@@ -171,7 +171,11 @@ function getHead(callback) {
         min = videoObj.id;
       }
     }
-    callback(minVideo);
+    if (min === LIMIT) {
+      callback(true, minVideo);
+    } else {
+      callback(false, minVideo);
+    }
   });
 }
 
@@ -209,9 +213,13 @@ function submitVideo(owner, videoName, linkName, callback) {
 }
 
 function like(username, callback) {
-  getHead(function(minVideo) {
-    root.child('queue/' + minVideo.id + '/likes').child(username).set('liked');
-    callback(false);
+  getHead(function(error, minVideo) {
+    if (error) {
+      callback(error);
+    } else {
+      root.child('queue/' + minVideo.id + '/likes').child(username).set('liked');
+      callback(false);
+    }
   });
 }
 
