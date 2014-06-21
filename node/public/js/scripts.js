@@ -17,6 +17,9 @@ $(document).ready(function(){
       html += '</div>';
       playing = '';
       
+      // currently in: PLAY WHATEVER COMES UP MODE
+      // add counter == 0 back to play normal mode, right after the second ( of 
+      // the following line
       if (playingVideo == '' || (counter == 0 && playingVideoLink != video.link)) {
         playingVideoLink = video.link;
         playingVideo = video.link + '?autoplay=1';
