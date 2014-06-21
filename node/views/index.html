@@ -7,12 +7,15 @@
   <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Muli:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>  
+  <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script> 
+  <script type="text/javascript">
+    var user = '{{user}}';
+  </script> 
   <script src="js/scripts.js"></script>
 </head>
 <body>
 <div class="container">
-  <div class="friendly-hello">Why hello, MichaelX. <span class="logout">Logout?</span></div>
+  <div class="friendly-hello">Why hello, {{user}}. <span class="logout"><a href="/logout">Logout?</a></span></div>
   <h2>YOUTUBE WITH</h2>
   <h1>POINTS!</h1>
   <div class="playlist-container">

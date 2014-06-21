@@ -17,7 +17,7 @@ exports.findUser = model.findUser;
 
 exports.viewer = function(req, res) {
   if (req.user) {
-    res.render('index.html');
+    res.render('index.html', {user: req.user.username});
   } else {
     res.redirect('/login');
   }
