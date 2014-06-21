@@ -54,6 +54,20 @@ h2 {
   border-bottom: 1px solid #ddd;
 }
 
+.playlist-item:hover .strike {
+  display: inline;
+}
+
+.strike {
+  margin-left: 10px;
+  color: #da0000;
+  display: none;
+}
+
+.strike:hover {
+  cursor: pointer;
+}
+
 .uploader, .title, .isplaying {
   display: inline-block;
 }
@@ -103,6 +117,8 @@ h2 {
   cursor: pointer;
   color: #fff;
 }
+
+
 
 .url-input {
   outline: none;
