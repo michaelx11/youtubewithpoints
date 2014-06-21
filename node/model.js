@@ -113,4 +113,8 @@ exports.getStrikes = function(username, callback) {
   });
 }
 
+exports.getTime = function() {
+  return ((new Date()).getTime() - timestamp) / 1000;
+}
+
 exports.findUser = firebase.findUser;

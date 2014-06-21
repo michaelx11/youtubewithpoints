@@ -57,6 +57,15 @@ exports.readySubmit = function(req, res) {
      */
 }
 
+exports.time = function(req, res) {
+  var timeIntoSong = "t=" + Math.round(model.getTime());
+  res.writeHead(200, {
+  'Content-Length': timeIntoSong.length,
+  'Content-Type': 'text/plain' })
+  res.write(timeIntoSong);
+  res.end();
+}
+
 exports.register = function(req, res) {
   model.createUser(req.body.username, req.body.password, req.body.passwordconfirm, function(err) {
     if (err) {

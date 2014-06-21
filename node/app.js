@@ -51,6 +51,7 @@ app.get('/submit', routes.readySubmit);
 app.post('/submit', routes.submit);
 app.post('/like', routes.like);
 app.post('/strike', routes.strike);
+app.get('/time', routes.time);
 //app.get('/scoreboard', routes.scoreboard);
 
 http.createServer(app).listen(app.get('port'), function() {
