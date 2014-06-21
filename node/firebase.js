@@ -84,8 +84,13 @@ function getVideoData(linkName, callback) {
   http.get(
       "http://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=jsonc",
       function(res) {
+        var output = "";
+        res.setEncoding("utf8");
         res.on("data", function(chunk) {
-          callback(false, chunk.toString("utf8"));
+          output += chunk;
+        });
+        res.on("end", function() {
+          callback(false, output);
           return;
         });
       }).on('error', function(e) {
