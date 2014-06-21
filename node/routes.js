@@ -70,10 +70,7 @@ exports.register = function(req, res) {
 exports.submit = function(req, res) {
   var link = req.body.link;
   model.submitVideo(req.user.username, link, link, function(err) {
-    if (err) {
-    } else {
-      res.redirect('/viewer');
-    }
+    res.redirect('/viewer');
   });
 }
 

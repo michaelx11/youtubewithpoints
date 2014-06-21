@@ -34,6 +34,7 @@ var http = require('http');
 
 var LIMIT = 2147483649;
 var MAX_DURATION = 750;
+var RATE_LIMIT = 10;
 
 function createUser(username, pwHash, callback) {
   root.child('counters').child('userID').transaction(function(userID) {
@@ -189,7 +190,7 @@ function submitVideo(owner, videoName, linkName, callback) {
           counter++;
         }
       }
-      if (counter > 3) {
+      if (counter >= RATE_LIMIT) {
         callback("You have too many videos in the queue.");
       } else {
         createVideo(owner, videoName, linkName, videoID, function(error) {
