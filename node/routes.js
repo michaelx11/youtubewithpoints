@@ -69,6 +69,17 @@ exports.time = function(req, res) {
   });
 }
 
+exports.progress = function(req, res) {
+  model.getProgress(function(progress) {
+    var percentDone = progress;
+    res.writeHead(200, {
+    'Content-Length': percentDone.length,
+    'Content-Type': 'text/plain' })
+    res.write(percentDone);
+    res.end();
+  });
+}
+
 exports.register = function(req, res) {
   model.createUser(req.body.username, req.body.password, req.body.passwordconfirm, function(err) {
     if (err) {

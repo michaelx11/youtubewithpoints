@@ -171,4 +171,20 @@ exports.getTime = function(callback) {
   });
 }
 
+exports.getProgress = function(callback) {
+  firebase.getHead(function(error, minVideo) {
+    if(error || isSwitching) {
+      callback("0 0");
+    } else {
+      var returnValue = Math.max((((new Date()).getTime() - timestamp) / 1000 - DELAY_ALLOWANCE), 0);
+      if (returnValue > minVideo.duration - BUFFER_TIME / 1000) {
+        callback("0 " + minVideo.duration);
+        return;
+      }
+      var printVal = Math.round((100.0 * returnValue) / minVideo.duration) + " " + (Math.max(minVideo.duration - returnValue, 0));
+      callback(printVal);
+    }
+  });
+}
+
 exports.findUser = firebase.findUser;
