@@ -30,8 +30,7 @@ function tick() {
         var time = (new Date()).getTime();
         var duration = minVideo.duration * 1000;
         // exceeds time limit
-//        if (time > duration + timestamp + BUFFER_TIME) {
-        if (time > 20*1000 + timestamp + BUFFER_TIME) {
+        if (time > duration + timestamp + BUFFER_TIME) {
           // remove the oldest video
           firebase.popQueue(minVideo, false, function (error) {
             if (!error) {
