@@ -41,10 +41,14 @@ h3 {
 .logout a {
   text-decoration: none;
   color: #999;
+  -webkit-transition: color 0.1s;
+  transition: color 0.1s;
 }
 
 .logout a:hover {
   color: #000;
+  -webkit-transition: color 0.1s;
+  transition: color 0.1s;
 }
 
 .container {
@@ -259,5 +263,14 @@ td.points {
 .fb-like {
   float: left;
   clear: none;
-  opacity: 0.9;
+  opacity: 0.5;
+  display: none;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+
+.fb-like:hover {
+  opacity: 0.8;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
 }
