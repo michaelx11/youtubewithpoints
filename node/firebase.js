@@ -162,7 +162,7 @@ function popQueue(videoObject, strikeOut, callback) {
       return;
     }
     findVideoArchive(videoObject.link, function(contained) {
-      if (!contained) {
+      if (!contained && !strikeOut) {
         root.child('archive').child(videoObject.id).set(videoObject);
       }
 
