@@ -80,27 +80,33 @@ exports.register = function(req, res) {
 exports.submit = function(req, res) {
   var link = req.body.link;
   model.submitVideo(req.user.username, link, link, function(err) {
+    /*
     if (err) {
       res.send(err);
     }
+    */
     res.end();
   });
 }
 
 exports.like = function(req, res) {
   model.like(req.user.username, function(err) {
+    /*
     if (err) {
       res.send(err);
     }
+    */
     res.end();
   });
 }
 
 exports.strike = function(req, res) {
   model.strike(req.user.username, req.body.songId, function(err) {
+    /*
     if (err) {
       res.send(err);
     }
+    */
     res.end();
   });
 }
