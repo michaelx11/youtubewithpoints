@@ -142,21 +142,35 @@ h2 {
   float: left;
   width: 550px;
 }
+.mute-btn {
+  float: left;
+  width: 30px;
+  height: 30px;
+  background-image: url('../images/music-controls.png');
+  background-position: -30px 0;
+  margin: 12px;
+  opacity: 0.9;
+}
+
+.mute-btn:hover {
+  opacity: 1;
+  cursor: pointer;
+}
 
 ::-webkit-input-placeholder {
-   color: #fff;
+   color: #a6efe7;
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   color: #fff;  
+   color: #a6efe7;  
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: #fff;  
+   color: #a6efe7;  
 }
 
 :-ms-input-placeholder {  
-   color: #fff;  
+   color: #a6efe7;  
 }
 
 #ytplayer {
