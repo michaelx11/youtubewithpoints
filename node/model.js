@@ -6,8 +6,8 @@ var LONELY_BOT = "LonelyBot";
 
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
-var TICK_INTERVAL = 5 * 1000;
-var LONELY_INTERVAL = 7 * 1000;
+var TICK_INTERVAL = 2 * 1000;
+var LONELY_INTERVAL = 3 * 1000;
 var DELAY_ALLOWANCE = 5;
 
 var isSwitching = false;

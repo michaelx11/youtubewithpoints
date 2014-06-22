@@ -1,7 +1,7 @@
 $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('https://youtubewpoints-dev.firebaseio.com/');
+  var dataRef = new Firebase('https://youtubewithpoints.firebaseio.com/');
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'
@@ -21,12 +21,12 @@ $(document).ready(function(){
   var generateProgressBar = function() {
     // progress bar population
     var $bar = $('.progress');
-    $bar.css({width: 0});
+    $bar.css({width: "0%"});
     $.get('/progress', function(data){
       currentWidth = data.split(' ')[0] + '%';
       timeToEnd = data.split(' ')[1] * 1000;
       $bar.css({width: currentWidth});
-      $bar.animate({width: '100%'}, timeToEnd, 'linear', function(){});
+      $bar.stop().animate({width: '100%'}, timeToEnd, 'linear', function(){});
     });   
   }
   
