@@ -244,7 +244,7 @@ td.points {
   width: 100%;
   position: fixed;
   bottom: 53px;
-  background-color: #009d8c
+  background-color: #a3efe7;
 }
 
 .progress {
@@ -252,6 +252,6 @@ td.points {
   position: fixed;
   left: 0;
   bottom: 53px;
-  background-color: #a3efe7;
-  width: 10px;
+  background-color: #009d8c;
+  width: 0;
 }
