@@ -1,0 +1,54 @@
+body {
+  font-family: 'Muli', sans-serif;
+  font-weight: 300;
+  line-height: normal;
+}
+
+h1 {
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 60px;
+  line-height: 50px;
+  color: #00c2ad;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 300;
+  font-size: 30px;
+  color: #333;
+}
+
+h3 {
+  font-size: 18px;
+  color: #aaa;
+  margin-bottom: 50px;
+}
+
+.v-container {
+  text-align: center;
+  width: 400px;
+  height: 220px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -110px;
+}
+
+a {
+  padding: 10px 15px 10px 40px;
+  border-radius: 5px;
+  background-color: #2f4a84;
+  color: #e4ebfa;
+  font-size: 14px;
+  text-decoration: none;
+  background-image: url('../images/facebook-login.png');
+  background-size: 20%;
+  background-repeat: no-repeat;
+}
+
+a:hover {
+  opacity: 0.9;
+}

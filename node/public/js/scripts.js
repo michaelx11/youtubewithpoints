@@ -1,9 +1,8 @@
 $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('https://youtubewithpoints.firebaseio.com/');
-  var strikeWords = ['nope', 'doubly nope', 'goodbye'];
-  
+  var dataRef = new Firebase('https://youtubewpoints-dev.firebaseio.com/');
+  var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   
   $('.submit-footer-btn').on('click', function(){
     var youtubeLink = $('.url-input').val();
@@ -40,6 +39,9 @@ $(document).ready(function(){
       var strikes = Object.keys(video.strikes).length;
       console.log(strikes);
       
+      if (strikes > 3){
+        strikes = 3;
+      }
       var strikeWord = strikeWords[strikes];
       
       if (video.strikes[user] !== undefined) {
@@ -49,7 +51,7 @@ $(document).ready(function(){
       }
       html += '<div class="playlist-item">';
       html += '<div class="isplaying">' + playing + '</div> ';
-      html += '<div class="uploader">' + video.owner + '</div> ';
+      html += '<div class="uploader">' + video.owner.split(' ')[0] + '</div> ';
       html += '<div class="title">' + video.name + '<span class="strike ' + id + gray + '">' + strikeWord + '</span></div> ';
       html += '</div>';
       playing = '';
