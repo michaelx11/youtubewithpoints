@@ -134,6 +134,7 @@ $(document).ready(function(){
         }
         
         // progress bar population
+        $bar.css({width: 0});
         $.get('/progress', function(data){
           $bar = $('.progress');
           currentWidth = data.split(' ')[0] + '%';
