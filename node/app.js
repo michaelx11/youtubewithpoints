@@ -11,8 +11,9 @@ var app = express();
 
 // all environments
 
-app.set('port', 80);
-//app.set('port', 8080);
+
+//app.set('port', 80);
+app.set('port', 8080);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);

@@ -2,7 +2,7 @@
 
 var Firebase = require('firebase');
 var authConfig = require('./authConfig');
-var root = new Firebase('https://youtubewithpoints.firebaseIO.com');
+var root = new Firebase('https://youtubewpoints-dev.firebaseIO.com');
 root.auth(authConfig.firebaseSecret);
 var http = require('http');
 

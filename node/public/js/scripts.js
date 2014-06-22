@@ -92,10 +92,10 @@ $(document).ready(function(){
       html += '</div>';
       playing = '';
       
-      if (!mute) {
-        if (playingVideoLink == '' || (counter == 0 && playingVideoLink != video.link)) {
-          var url = '/time';
-          playingVideoLink = video.link;
+      if (playingVideoLink == '' || (counter == 0 && playingVideoLink != video.link)) {
+        var url = '/time';
+        playingVideoLink = video.link;
+        if (!mute) {
           $.get(url, function(data){
             playingVideo = playingVideoLink + '?autoplay=1&' + data;
             console.log(playingVideo);
