@@ -113,8 +113,14 @@ exports.submitVideo = function(username, videoName, linkName, callback) {
     idChunk = match[1];
   }
   var constructedLink = "http://www.youtube.com/embed/" + idChunk;
-  firebase.submitVideo(username, videoName, constructedLink, function(err, user) {
-    callback(false);
+  firebase.findVideoQueue(constructedLink, function(containsVideo) {
+    if (containsVideo) {
+      callback('Video already in queue.');
+    } else {
+      firebase.submitVideo(username, videoName, constructedLink, function(err, user) {
+        callback(false);
+      });
+    }
   });
 }
 

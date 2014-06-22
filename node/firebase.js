@@ -155,30 +155,35 @@ function popQueue(videoObject, strikeOut, callback) {
       callback(false);
       return;
     }
-    root.child('archive').child(videoObject.id).set(videoObject);
-    getUser(videoObject.owner, function(error, owner) {
-      if (error) {
-        callback(error);
-      } else {
-        if (strikeOut) {
-          root.child('users').child(owner.id).child('score').transaction(function(score) {
-            return score - 1;
-          }, function(error, committed, snapshot) {
-            // fail silently
-            callback(false);
-          });
-        } else {
-          if (videoObject.likes === 0) {
-            videoObject.likes = {};
-          }
-          root.child('users').child(owner.id).child('score').transaction(function(score) {
-            return score + Object.keys(videoObject.likes).length + 1;
-          }, function(error, committed, snapshot) {
-            // fail silently
-            callback(false);
-          });
-        }
+    findVideoArchive(videoObject.link, function(contained) {
+      if (!contained) {
+        root.child('archive').child(videoObject.id).set(videoObject);
       }
+
+      getUser(videoObject.owner, function(error, owner) {
+        if (error) {
+          callback(error);
+        } else {
+          if (strikeOut) {
+            root.child('users').child(owner.id).child('score').transaction(function(score) {
+              return score - 1;
+            }, function(error, committed, snapshot) {
+              // fail silently
+              callback(false);
+            });
+          } else {
+            if (videoObject.likes === 0) {
+              videoObject.likes = {};
+            }
+            root.child('users').child(owner.id).child('score').transaction(function(score) {
+              return score + Object.keys(videoObject.likes).length + 1;
+            }, function(error, committed, snapshot) {
+              // fail silently
+              callback(false);
+            });
+          }
+        }
+      });
     });
   });
 }
@@ -199,6 +204,40 @@ function getArchive(callback) {
       callback(data.val());
     } else {
       callback(null);
+    }
+  });
+}
+
+function findVideoArchive(linkName, callback) {
+  getArchive(function(data) {
+    if (data) {
+      for (var vKey in data) {
+        var video = data[vKey];
+        if (video.link === linkName) {
+          callback(true);
+          return;
+        }
+      }
+      callback(false);
+    } else {
+      callback(false);
+    }
+  });
+}
+
+function findVideoQueue(linkName, callback) {
+  getQueue(function(data) {
+    if (data) {
+      for (var vKey in data) {
+        var video = data[vKey];
+        if (video.link === linkName) {
+          callback(true);
+          return;
+        }
+      }
+      callback(false);
+    } else {
+      callback(false);
     }
   });
 }
@@ -325,3 +364,5 @@ exports.like = like;
 exports.strike = strike;
 exports.getLikes = getLikes;
 exports.getStrikes = getStrikes;
+exports.findVideoArchive = findVideoArchive
+exports.findVideoQueue = findVideoQueue
