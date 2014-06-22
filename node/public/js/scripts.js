@@ -134,9 +134,9 @@ $(document).ready(function(){
         }
         
         // progress bar population
+        var $bar = $('.progress');
         $bar.css({width: 0});
         $.get('/progress', function(data){
-          $bar = $('.progress');
           currentWidth = data.split(' ')[0] + '%';
           timeToEnd = data.split(' ')[1] * 1000;
           $bar.css({width: currentWidth});
