@@ -21,6 +21,18 @@ h2 {
   margin: 20px 0 0 0;
 }
 
+h3 {
+  color: #fff;
+  text-align: center;
+  font-family: 'Muli', sans-serif;
+  font-size: 30px;
+  font-weight: 100;
+  background-color: rgba(0,0,0,0.2);
+  padding: 5px 20px;
+  width: 300px;
+  margin: 40px auto 0;
+}
+
 .friendly-hello {
   text-align: right;
   color: #555;
@@ -100,9 +112,12 @@ h2 {
 
 .submit-footer {
   width: 100%;
+  min-width: 800px;
   position: fixed;
   bottom: 0px;
   background-color: #00c2ad;
+  z-index: 2;
+  
 }
 
 .submit-footer-content {
@@ -142,6 +157,7 @@ h2 {
   float: left;
   width: 550px;
 }
+
 .mute-btn {
   float: left;
   width: 30px;
@@ -152,9 +168,42 @@ h2 {
   opacity: 0.9;
 }
 
-.mute-btn:hover {
+.mute-btn:hover, .score-btn:hover, .close-btn:hover {
   opacity: 1;
   cursor: pointer;
+}
+
+.close-btn {
+  background-image: url('../images/close-btn.png');
+  float: right;
+  width: 30px;
+  height: 30px;
+  opacity: 0.6;
+  background-size: 90%;
+  margin: 10px;
+  background-repeat: no-repeat;
+}
+
+.score-btn {
+  float: right;
+  width: 30px;
+  height: 30px;
+  background-image: url('../images/highscores.png');
+  margin: 14px 10px 10px;
+  opacity: 0.9;
+  background-size: 90%;
+  background-repeat: no-repeat;
+}
+
+.scoreboard {
+  position: fixed; 
+  top: 1000px;
+  background-color: rgba(0,25,22,0.8);
+  color: #fff;
+  bottom: 0;
+  left: 0; 
+  right: 0;
+  z-index: 1;
 }
 
 ::-webkit-input-placeholder {
@@ -175,4 +224,17 @@ h2 {
 
 #ytplayer {
   display: none;
+}
+
+table {
+  margin: 20px auto;
+}
+
+td {
+  padding: 5px 20px 0 20px;
+  width: 
+}
+
+td.points {
+  font-weight: 500;
 }

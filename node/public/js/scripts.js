@@ -18,6 +18,19 @@ $(document).ready(function(){
     });
   }
   
+  $('.score-btn').on('click', function() {
+  console.log($('.scoreboard').css('top'));
+    if ($('.scoreboard').css('top') == '0px') {
+      $('.scoreboard').animate({top: 1000}, 800);
+    } else {
+      $('.scoreboard').animate({top: 0}, 800);
+    }
+  });
+  
+  $('.close-btn').on('click', function() {
+    $('.scoreboard').animate({top: 1000}, 800);
+  });
+  
   $('.mute-btn').on('click', function() {
     if (!mute) {
       $('#ytplayer').attr('src','');
@@ -55,6 +68,23 @@ $(document).ready(function(){
     $.post(url, data, function(e) {
       console.log('strike for song');
     });
+  });
+  
+  dataRef.child('users').on('value', function(snapshot) {
+    var users = snapshot.val();
+    console.log(users);
+    var sortable = [];
+    for (var u in users)
+      sortable.push([users[u].username, users[u].score])
+    sortable.sort(function(a, b) {return b[1] - a[1]})
+    var html = "<table>";
+    for (i in sortable) {
+      var u = sortable[i][0].split(' ')[0] + ' ' + sortable[i][0].split(' ')[1][0];
+      var s = sortable[i][1];
+      html += '<tr><td>' + u + '</td><td class="points">' + s + '</td></tr>';
+    }
+    html += "</table>";
+    $('.score-container').html(html);
   });
   
   dataRef.child('queue').on('value', function(snapshot) {
