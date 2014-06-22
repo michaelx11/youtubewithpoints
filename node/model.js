@@ -8,7 +8,7 @@ var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
 var TICK_INTERVAL = 5 * 1000;
 var LONELY_INTERVAL = 7 * 1000;
-var DELAY_ALLOWANCE = 10;
+var DELAY_ALLOWANCE = 5;
 
 function initialize() {
   timestamp = (new Date()).getTime();
@@ -147,8 +147,20 @@ exports.getStrikes = function(username, callback) {
   });
 }
 
-exports.getTime = function() {
-  return Math.max((((new Date()).getTime() - timestamp) / 1000 - DELAY_ALLOWANCE), 0);
+exports.getTime = function(callback) {
+  firebase.getHead(function(error, minVideo) {
+    if(error) {
+      callback(0);
+    } else {
+      var returnValue = Math.max((((new Date()).getTime() - timestamp) / 1000 - DELAY_ALLOWANCE), 0);
+      console.log(returnValue + " " + (minVideo.duration - BUFFER_TIME / 1000));
+      if (returnValue > minVideo.duration - BUFFER_TIME / 1000) {
+        callback(0);
+        return;
+      }
+      callback(returnValue);
+    }
+  });
 }
 
 exports.findUser = firebase.findUser;

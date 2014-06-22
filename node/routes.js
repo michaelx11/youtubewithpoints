@@ -59,12 +59,14 @@ exports.readySubmit = function(req, res) {
 }
 
 exports.time = function(req, res) {
-  var timeIntoSong = "start=" + Math.round(model.getTime());
-  res.writeHead(200, {
-  'Content-Length': timeIntoSong.length,
-  'Content-Type': 'text/plain' })
-  res.write(timeIntoSong);
-  res.end();
+  model.getTime(function(time) {
+    var timeIntoSong = "start=" + Math.round(time);
+    res.writeHead(200, {
+    'Content-Length': timeIntoSong.length,
+    'Content-Type': 'text/plain' })
+    res.write(timeIntoSong);
+    res.end();
+  });
 }
 
 exports.register = function(req, res) {
