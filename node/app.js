@@ -6,6 +6,7 @@ var routes = require('./routes');
 var firebase = require('./firebase');
 var authConfig = require('./authConfig');
 var FacebookStrategy = require("passport-facebook").Strategy;
+var favicon = require('serve-favicon');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use(express.session({ secret: 'SECRET' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(favicon(__dirname + '/public/images/favicons/favicon.ico'));
 app.use(routes.initialRouter);
 app.use(app.router);
 
