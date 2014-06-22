@@ -40,14 +40,20 @@ var RATE_LIMIT = 4;
 var LONELY_BOT = "LonelyBot";
 
 function createUserFb(username, id, callback) {
-  var user = {
-    'id' : id,
-    'username' : username,
-    'score' : 0
-  };
+  findUser(id, function(notFound, foundUser) {
+    if (notFound) {
+      var user = {
+        'id' : id,
+        'username' : username,
+        'score' : 0
+      };
 
-  root.child('users').child(id).set(user);
-  callback(false, user);
+      root.child('users').child(id).set(user);
+      callback(false, user);
+    } else {
+      callback(false, foundUser);
+    }
+  });
 }
 
 function createUser(username, pwHash, callback) {

@@ -10,8 +10,15 @@ var TICK_INTERVAL = 5 * 1000;
 var LONELY_INTERVAL = 7 * 1000;
 var DELAY_ALLOWANCE = 5;
 
+var isSwitching = false;
+
 function initialize() {
   timestamp = (new Date()).getTime();
+  firebase.getHead(function (error, minVideo) {
+    if (!error) {
+      isPlaying = minVideo.id;
+    }
+  });
 }
 initialize();
 
@@ -31,11 +38,13 @@ function tick() {
         var duration = minVideo.duration * 1000;
         // exceeds time limit
         if (time > duration + timestamp + BUFFER_TIME) {
+          isSwitching = true;
           // remove the oldest video
           firebase.popQueue(minVideo, false, function (error) {
             if (!error) {
               // get new timestamp
               timestamp = (new Date()).getTime();
+              isSwitching = false;
             }
           });
         }
@@ -149,7 +158,7 @@ exports.getStrikes = function(username, callback) {
 
 exports.getTime = function(callback) {
   firebase.getHead(function(error, minVideo) {
-    if(error) {
+    if(error || isSwitching) {
       callback(0);
     } else {
       var returnValue = Math.max((((new Date()).getTime() - timestamp) / 1000 - DELAY_ALLOWANCE), 0);
