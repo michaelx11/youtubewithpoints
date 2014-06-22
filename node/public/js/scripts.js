@@ -132,6 +132,15 @@ $(document).ready(function(){
             $('#ytplayer').attr('src',playingVideo);
           })
         }
+        
+        // progress bar population
+        $.get('/progress', function(data){
+          $bar = $('.progress');
+          currentWidth = data.split(' ')[0] + '%';
+          timeToEnd = data.split(' ')[1] * 1000;
+          $bar.css({width: currentWidth});
+          $bar.animate({width: '100%'}, timeToEnd, 'linear', function(){});
+        });
       }
       
       counter ++;

@@ -238,3 +238,20 @@ td {
 td.points {
   font-weight: 500;
 }
+
+.progress-bar {
+  height: 5px;
+  width: 100%;
+  position: fixed;
+  bottom: 53px;
+  background-color: #009d8c
+}
+
+.progress {
+  height: 5px;
+  position: fixed;
+  left: 0;
+  bottom: 53px;
+  background-color: #a3efe7;
+  width: 10px;
+}
