@@ -18,6 +18,18 @@ $(document).ready(function(){
     });
   }
   
+  var generateProgressBar = function() {
+    // progress bar population
+    var $bar = $('.progress');
+    $bar.css({width: 0});
+    $.get('/progress', function(data){
+      currentWidth = data.split(' ')[0] + '%';
+      timeToEnd = data.split(' ')[1] * 1000;
+      $bar.css({width: currentWidth});
+      $bar.animate({width: '100%'}, timeToEnd, 'linear', function(){});
+    });   
+  }
+  
   $('.score-btn').on('click', function() {
   console.log($('.scoreboard').css('top'));
     if ($('.scoreboard').css('top') == '0px') {
@@ -44,6 +56,7 @@ $(document).ready(function(){
         playingVideo = playingVideoLink + '?autoplay=1&' + data;
         console.log(playingVideo);
         $('#ytplayer').attr('src',playingVideo);
+        generateProgressBar();
       })
           
       $(this).css('background-position', '-30px');
@@ -130,18 +143,10 @@ $(document).ready(function(){
             playingVideo = playingVideoLink + '?autoplay=1&' + data;
             console.log(playingVideo);
             $('#ytplayer').attr('src',playingVideo);
+            generateProgressBar();
           })
         }
         
-        // progress bar population
-        var $bar = $('.progress');
-        $bar.css({width: 0});
-        $.get('/progress', function(data){
-          currentWidth = data.split(' ')[0] + '%';
-          timeToEnd = data.split(' ')[1] * 1000;
-          $bar.css({width: currentWidth});
-          $bar.animate({width: '100%'}, timeToEnd, 'linear', function(){});
-        });
       }
       
       counter ++;
