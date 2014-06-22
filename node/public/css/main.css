@@ -240,7 +240,7 @@ td.points {
 }
 
 .progress-bar {
-  height: 5px;
+  height: 4px;
   width: 100%;
   position: fixed;
   bottom: 53px;
@@ -248,10 +248,16 @@ td.points {
 }
 
 .progress {
-  height: 5px;
+  height: 4px;
   position: fixed;
   left: 0;
   bottom: 53px;
   background-color: #009d8c;
   width: 0;
+}
+
+.fb-like {
+  float: left;
+  clear: none;
+  opacity: 0.9;
 }

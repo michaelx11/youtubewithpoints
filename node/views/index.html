@@ -7,6 +7,7 @@
   <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Muli:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
   <meta property="og:image"content="images/large-icon.png" />
+  <meta name="description" content="Tired of listening to your own playlist? Try listening to this one. Experience music, democratically.">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script> 
   <script type="text/javascript">
@@ -15,8 +16,19 @@
   <script src="js/scripts.js"></script>
 </head>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=627543914007490&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <div class="container">
+  <div class="fb-like" data-href="http://michaelx.io/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
   <div class="friendly-hello">Why hello, {{user}}. <span class="logout"><a href="/logout">Logout?</a></span></div>
+  
   <h2>YOUTUBE WITH</h2>
   <h1>POINTS!</h1>
   <div class="playlist-container">
