@@ -2,7 +2,7 @@
 
 var Firebase = require('firebase');
 var authConfig = require('./authConfig');
-var root = new Firebase('https://youtubewpoints-dev.firebaseIO.com');
+var root = new Firebase(authConfig.firebaseURL);
 root.auth(authConfig.firebaseSecret);
 var http = require('http');
 
@@ -35,8 +35,8 @@ var http = require('http');
  */
 
 var LIMIT = 2147483649;
-var MAX_DURATION = 750;
-var RATE_LIMIT = 10;
+var MAX_DURATION = 1000;
+var RATE_LIMIT = 4;
 var LONELY_BOT = "LonelyBot";
 
 function createUserFb(username, id, callback) {
@@ -121,38 +121,37 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
     if (error) {
       callback(error);
     } else {
-      var bodychunk = "";
       try {
-        bodychunk = JSON.parse(chunk);
-      } catch (e) {
-        callback('Parser error, try again!');
-        return;
-      }
-      var data = bodychunk.data;
-      var title = data.title;
-      var duration = parseInt(data.duration);
-      if (duration > MAX_DURATION) {
-        callback("Video too long");
-        return;
-      }
+        var bodychunk = "";
+          bodychunk = JSON.parse(chunk);
+        var data = bodychunk.data;
+        var title = data.title;
+        var duration = parseInt(data.duration);
+        if (duration > MAX_DURATION) {
+          callback("Video too long");
+          return;
+        }
 
-      root.child('queue').child(Id).set({
-        'link': linkName,
-        'name': title,
-        'owner': owner,
-        'strikes' : 0,
-        'likes' : 0,
-        'duration' : duration,
-        'id' : Id
-      });
-      callback(false);
+        root.child('queue').child(Id).set({
+          'link': linkName,
+          'name': title,
+          'owner': owner,
+          'strikes' : 0,
+          'likes' : 0,
+          'duration' : duration,
+          'id' : Id
+        });
+        callback(false);
+      } catch (e) {
+        callback('Error retrieving video metadata.');
+      }
     }
   });
 }
 
 function popQueue(videoObject, strikeOut, callback) {
   root.child('queue').child(videoObject.id).remove(function() {
-    if (true || videoObject.owner === 'LonelyBot') {
+    if (videoObject.owner === 'LonelyBot') {
       callback(false);
       return;
     }

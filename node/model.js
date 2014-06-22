@@ -7,7 +7,8 @@ var LONELY_BOT = "LonelyBot";
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
 var TICK_INTERVAL = 5 * 1000;
-var LONELY_INTERVAL = 10 * 1000;
+var LONELY_INTERVAL = 7 * 1000;
+var DELAY_ALLOWANCE = 10;
 
 function initialize() {
   timestamp = (new Date()).getTime();
@@ -49,7 +50,7 @@ function lonelyBot() {
     if (!queue) {
       firebase.getArchive(function (archive) {
         var keys = Object.keys(archive);
-        var sample = Math.ceil(Math.random() * keys.length);
+        var sample = Math.floor(Math.random() * keys.length);
         var randomVideo = archive[keys[sample]];
         exports.submitVideo(LONELY_BOT, randomVideo.name, randomVideo.link, function(err) {});
       });
@@ -142,7 +143,7 @@ exports.getStrikes = function(username, callback) {
 }
 
 exports.getTime = function() {
-  return ((new Date()).getTime() - timestamp) / 1000;
+  return Math.max((((new Date()).getTime() - timestamp) / 1000 - DELAY_ALLOWANCE), 0);
 }
 
 exports.findUser = firebase.findUser;
