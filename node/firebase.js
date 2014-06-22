@@ -37,6 +37,7 @@ var http = require('http');
 var LIMIT = 2147483649;
 var MAX_DURATION = 750;
 var RATE_LIMIT = 10;
+var LONELY_BOT = "LonelyBot";
 
 function createUserFb(username, id, callback) {
   var user = {
@@ -88,7 +89,12 @@ function getUser(username, callback) {
 
 function findUser(id, callback) {
   root.child('users').child(id).once('value', function(data) {
-    callback(false, data.val());
+    if (data.val()) {
+      callback(false, data.val());
+    } else {
+      console.log("User " + id + " was not found.");
+      callback(true, null);
+    }
   });
 }
 
@@ -146,25 +152,33 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
 
 function popQueue(videoObject, strikeOut, callback) {
   root.child('queue').child(videoObject.id).remove(function() {
+    if (true || videoObject.owner === 'LonelyBot') {
+      callback(false);
+      return;
+    }
     root.child('archive').child(videoObject.id).set(videoObject);
     getUser(videoObject.owner, function(error, owner) {
-      if (strikeOut) {
-        root.child('users').child(owner.id).child('score').transaction(function(score) {
-          return score - 1;
-        }, function(error, committed, snapshot) {
-          // fail silently
-          callback(false);
-        });
+      if (error) {
+        callback(error);
       } else {
-        if (videoObject.likes === 0) {
-          videoObject.likes = {};
+        if (strikeOut) {
+          root.child('users').child(owner.id).child('score').transaction(function(score) {
+            return score - 1;
+          }, function(error, committed, snapshot) {
+            // fail silently
+            callback(false);
+          });
+        } else {
+          if (videoObject.likes === 0) {
+            videoObject.likes = {};
+          }
+          root.child('users').child(owner.id).child('score').transaction(function(score) {
+            return score + Object.keys(videoObject.likes).length + 1;
+          }, function(error, committed, snapshot) {
+            // fail silently
+            callback(false);
+          });
         }
-        root.child('users').child(owner.id).child('score').transaction(function(score) {
-          return score + Object.keys(videoObject.likes).length + 1;
-        }, function(error, committed, snapshot) {
-          // fail silently
-          callback(false);
-        });
       }
     });
   });
@@ -172,13 +186,21 @@ function popQueue(videoObject, strikeOut, callback) {
 
 function getQueue(callback) {
   root.child('queue').once('value', function(data) {
-    callback(data.val());
+    if (data) {
+      callback(data.val());
+    } else {
+      callback(null);
+    }
   });
 }
 
 function getArchive(callback) {
   root.child('archive').once('value', function(data) {
-    callback(data.val());
+    if (data) {
+      callback(data.val());
+    } else {
+      callback(null);
+    }
   });
 }
 
@@ -240,15 +262,21 @@ function like(username, callback) {
     if (error) {
       callback(error);
     } else {
-      root.child('queue/' + minVideo.id + '/likes').child(username).set('liked');
-      callback(false);
+      root.child('queue').child(songId).on('value', function(data) {
+        if (data.val() !== null) {
+          root.child('queue/' + minVideo.id + '/likes').child(username).set('liked');
+          callback(false);
+        } else {
+          callback(true);
+        }
+      });
     }
   });
 }
 
 function strike(username, songId, callback) {
   root.child('queue').child(songId).on('value', function(data) {
-    if (data) {
+    if (data.val() !== null) {
       root.child('queue').child(songId).child('strikes/' + username).set('striked');
       callback(false);
     } else {
