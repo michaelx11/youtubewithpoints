@@ -153,7 +153,6 @@ exports.getTime = function(callback) {
       callback(0);
     } else {
       var returnValue = Math.max((((new Date()).getTime() - timestamp) / 1000 - DELAY_ALLOWANCE), 0);
-      console.log(returnValue + " " + (minVideo.duration - BUFFER_TIME / 1000));
       if (returnValue > minVideo.duration - BUFFER_TIME / 1000) {
         callback(0);
         return;
