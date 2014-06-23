@@ -36,10 +36,12 @@ function tick() {
       }
       // strike out
       if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
+          isSwitching = true;
         firebase.popQueue(minVideo, true, function (error) {
           if (!error) {
             // get new timestamp
             timestamp = (new Date()).getTime();
+            isSwitching = false
           }
         });
       } else { // expire naturally
@@ -182,9 +184,13 @@ exports.getTime = function(callback) {
 
 exports.getProgress = function(callback) {
   firebase.getHead(function(error, minVideo, queue) {
-    if(error || isSwitching) {
-      callback("0 0");
+    if(error) {
+      callback("0 99999999");
     } else {
+      if (isSwitching) {
+        callback('0 ' + minVideo.duration);
+        return;
+      }
       var returnValue = Math.max((((new Date()).getTime() - timestamp) / 1000 - DELAY_ALLOWANCE), 0);
       if (returnValue > minVideo.duration - BUFFER_TIME / 1000) {
         callback("0 " + minVideo.duration);
