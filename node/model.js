@@ -2,7 +2,7 @@ var firebase = require('./firebase');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
-var LONELY_BOT = "LonelyBot";
+var RETRO_BOT = "RetroBot";
 
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
@@ -60,7 +60,7 @@ function lonelyBot() {
         var keys = Object.keys(archive);
         var sample = Math.floor(Math.random() * keys.length);
         var randomVideo = archive[keys[sample]];
-        exports.submitVideo(LONELY_BOT, randomVideo.name, randomVideo.link, function(err) {});
+        exports.submitVideo(RETRO_BOT, randomVideo.name, randomVideo.link, function(err) {});
       });
     }
   });

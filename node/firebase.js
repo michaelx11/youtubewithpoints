@@ -37,7 +37,7 @@ var http = require('http');
 var LIMIT = 2147483649;
 var MAX_DURATION = 1000;
 var RATE_LIMIT = 4;
-var LONELY_BOT = "LonelyBot";
+var RETRO_BOT = "RetroBot";
 
 function createUserFb(username, id, callback) {
   findUser(id, function(notFound, foundUser) {
@@ -158,7 +158,7 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
 
 function popQueue(videoObject, strikeOut, callback) {
   root.child('queue').child(videoObject.id).remove(function() {
-    if (videoObject.owner === 'LonelyBot') {
+    if (videoObject.owner === RETRO_BOT) {
       callback(false);
       return;
     }
