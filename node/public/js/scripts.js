@@ -1,10 +1,30 @@
 $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('https://youtubewithpoints.firebaseio.com/');
+  var dataRef = new Firebase('youtubewithpoints.firebaseio.com/');
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'
+  
+  /***
+  Number People Online Counter
+  ***/
+  var listRef = dataRef;
+  var userRef = listRef.push();
+  // Add ourselves to presence list when online.
+  var presenceRef = new Firebase("https://youtubewithpoints.firebaseio.com/.info/connected");
+  presenceRef.on("value", function(snap) {
+    if (snap.val()) {
+      userRef.set(true);
+      // Remove ourselves when we disconnect.
+      userRef.onDisconnect().remove();
+    }
+  });
+  // Number of online users is the number of objects in the presence list.
+  listRef.on("value", function(snap) {
+    console.log("# of online users = " + (snap.numChildren() - 4));
+  });    
+
   
   var submitLink = function() {
     var youtubeLink = $('.url-input').val();
