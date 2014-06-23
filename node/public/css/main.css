@@ -228,7 +228,7 @@ h3 {
 }
 
 #ytplayer {
-  display: none;
+  display: block;
 }
 
 table {
