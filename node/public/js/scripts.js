@@ -70,6 +70,10 @@ $(document).ready(function(){
     $('.intro').fadeOut();
   })
   
+  $('.confused').on('click', function() {
+    $('.intro').fadeIn(100);
+  })
+  
   $('.score-btn').on('click', function() {
   console.log($('.scoreboard').css('top'));
     if ($('.scoreboard').css('top') == '0px') {

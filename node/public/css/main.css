@@ -369,3 +369,29 @@ button:hover {
   -webkit-transition: opacity 0.1s;
   transition: opacity 0.1s;
 }
+
+.scoreboard-footer {
+  text-align: right;
+  right: 20px;
+  bottom: 70px;
+  width: 100%;
+  font-size: 14px;
+  position: absolute;
+  opacity: 0.7;
+}
+
+a {
+  text-decoration: none;
+}
+
+.confused {
+  opacity: 0.7;
+  color: #fff;
+  -webkit-transition: opacity 0.1s;
+  transition: opacity 0.1s;
+}
+.confused:hover {
+  opacity: 1;
+  -webkit-transition: opacity 0.1s;
+  transition: opacity 0.1s;
+}
