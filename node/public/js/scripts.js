@@ -9,6 +9,7 @@ $(document).ready(function(){
   /***
   Number People Online Counter
   ***/
+  /*
   var listRef = dataRef;
   var userRef = listRef.push();
   // Add ourselves to presence list when online.
@@ -24,7 +25,7 @@ $(document).ready(function(){
   listRef.on("value", function(snap) {
     console.log("# of online users = " + (snap.numChildren() - 4));
   });    
-
+  */
   
   var submitLink = function() {
     var youtubeLink = $('.url-input').val();
