@@ -126,7 +126,7 @@ exports.submitVideo = function(username, videoName, linkName, callback) {
       callback('Video already in queue.');
     } else {
       firebase.submitVideo(username, videoName, constructedLink, function(err, user) {
-        callback(false);
+        callback(err);
       });
     }
   });

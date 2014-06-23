@@ -89,8 +89,9 @@ h3 {
   cursor: pointer;
 }
 
-.gray-out {
+.playlist-item .gray-out {
   color: #ccc;
+  cursor: default;
 }
 
 .uploader, .title, .isplaying, .isplaying-header {
@@ -263,14 +264,22 @@ td.points {
 .fb-like {
   float: left;
   clear: none;
-  opacity: 0.5;
+  opacity: 0.7;
   display: none;
   -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
 
 .fb-like:hover {
-  opacity: 0.8;
+  opacity: 0.9;
   -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
+}
+
+.status-msg {
+  width: 100%;
+  position: absolute;
+  bottom: 65px;
+  text-align: center;
+  color: #da0000;
 }

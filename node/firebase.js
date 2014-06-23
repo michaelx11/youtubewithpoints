@@ -149,7 +149,8 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
         });
         callback(false);
       } catch (e) {
-        callback('Error retrieving video metadata.');
+        // Error retrieving vidoe metadata
+        callback('Invalid youtube URL. Try a different URL?');
       }
     }
   });
@@ -294,7 +295,7 @@ function submitVideo(owner, videoName, linkName, callback) {
         callback("You have too many videos in the queue.");
       } else {
         createVideo(owner, videoName, linkName, videoID, function(error) {
-          callback(false);
+          callback(error);
         });
       }
     });

@@ -10,11 +10,19 @@ $(document).ready(function(){
     var youtubeLink = $('.url-input').val();
     var url = '/submit';
     var data = {link: youtubeLink};
-    $.post(url, data, function(e) {
-      $('.url-input').fadeOut(function() {
-        $('.url-input').val('');
-        $('.url-input').fadeIn();
-      });
+    $('.url-input').fadeOut(300, function() {
+      $('.url-input').val('');
+      $('.url-input').fadeIn(300);
+    });
+    $.post(url, data, function(msg) {
+      if (msg !== '') {
+        $('.status-msg').text(msg);
+        $('.status-msg')
+          .stop()
+          .fadeIn(300)
+          .delay(2000)
+          .fadeOut(300);
+      }
     });
   }
   
@@ -79,7 +87,6 @@ $(document).ready(function(){
     var url = '/strike';
     var data = {songId: id};
     $.post(url, data, function(e) {
-      console.log('strike for song');
     });
   });
   
