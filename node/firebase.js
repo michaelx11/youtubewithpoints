@@ -38,6 +38,8 @@ var LIMIT = 2147483649;
 var MAX_DURATION = 1000;
 var RATE_LIMIT = 4;
 var RETRO_BOT = "RetroBot";
+var SONG_BONUS = 5;
+var STRIKE_PENALTY = 1;
 
 function createUserFb(username, id, callback) {
   findUser(id, function(notFound, foundUser) {
@@ -173,7 +175,7 @@ function popQueue(videoObject, strikeOut, callback) {
         } else {
           if (strikeOut) {
             root.child('users').child(owner.id).child('score').transaction(function(score) {
-              return score - 1;
+              return score - STRIKE_PENALTY;
             }, function(error, committed, snapshot) {
               // fail silently
               callback(false);
@@ -183,7 +185,7 @@ function popQueue(videoObject, strikeOut, callback) {
               videoObject.likes = {};
             }
             root.child('users').child(owner.id).child('score').transaction(function(score) {
-              return score + Object.keys(videoObject.likes).length + 1;
+              return score + Object.keys(videoObject.likes).length + SONG_BONUS;
             }, function(error, committed, snapshot) {
               // fail silently
               callback(false);

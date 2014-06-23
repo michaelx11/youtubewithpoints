@@ -1,4 +1,5 @@
 var model = require('./model');
+var authConfig = require('./authConfig.js');
 
 exports.initialRouter = function(req, res, next) {
   if (req.url === '/login' || req.url === '/register' || (req.url.lastIndexOf('/auth/facebook', 0) === 0) ||
@@ -78,6 +79,15 @@ exports.progress = function(req, res) {
     res.write(percentDone);
     res.end();
   });
+}
+
+exports.getFirebase = function(req, res) {
+  var url = authConfig.firebaseURL;
+  res.writeHead(200, {
+    'Content-Length': url.length,
+    'Content-Type': 'text/plain' })
+  res.write(url);
+  res.end();
 }
 
 exports.register = function(req, res) {
