@@ -75,7 +75,8 @@ function createUser(username, pwHash, callback) {
       'id': userID,
       'username': username,
       'pwHash': pwHash,
-      'score' : 0
+      'score' : 0,
+      'userStatus': 'new'
     });
     callback(false);
   });
@@ -264,9 +265,9 @@ function getHead(callback) {
       }
     }
     if (min === LIMIT) {
-      callback(true, minVideo);
+      callback(true, minVideo, queue);
     } else {
-      callback(false, minVideo);
+      callback(false, minVideo, queue);
     }
   });
 }
@@ -305,7 +306,7 @@ function submitVideo(owner, videoName, linkName, callback) {
 }
 
 function like(username, callback) {
-  getHead(function(error, minVideo) {
+  getHead(function(error, minVideo, queue) {
     if (error) {
       callback(error);
     } else {
@@ -360,6 +361,21 @@ function getStrikes(minVideo, callback) {
   });
 }
 
+function updateUserStatus(username, newStatus, callback) {
+  root.child('users').once('value', function(data) {
+    var users = data.val();
+    for (var userKey in users) {
+      var user = users[userKey];
+      if (user.username == username) {
+        callback(false, user.userStatus);
+        root.child('users').child(user.id).child('userStatus').set(newStatus);
+        return;
+      }
+    }
+    callback(false, false);
+  });
+}
+
 exports.createUserFb = createUserFb;
 exports.createUser = createUser;
 exports.getUser = getUser;
@@ -375,3 +391,4 @@ exports.getLikes = getLikes;
 exports.getStrikes = getStrikes;
 exports.findVideoArchive = findVideoArchive
 exports.findVideoQueue = findVideoQueue
+exports.updateUserStatus = updateUserStatus

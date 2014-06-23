@@ -1,7 +1,7 @@
 $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('youtubewpoints-dev.firebaseio.com/');
+  var dataRef = new Firebase('youtubewithpoints.firebaseio.com/');
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'
@@ -12,7 +12,7 @@ $(document).ready(function(){
   var listRef = dataRef;
   var userRef = listRef.push();
   // Add ourselves to presence list when online.
-  var presenceRef = new Firebase("https://youtubewpoints-dev.firebaseio.com/.info/connected");
+  var presenceRef = new Firebase("https://youtubewithpoints.firebaseio.com/.info/connected");
   presenceRef.on("value", function(snap) {
     if (snap.val()) {
       userRef.set(true);
@@ -58,7 +58,7 @@ $(document).ready(function(){
     });   
   }
   
-  $.post('/userstatus', function(data) {
+  $.get('/userstatus', function(data) {
     if (data == "new") {
       // detected new user, display intro screen
       $('.intro').fadeIn(100);

@@ -14,7 +14,7 @@ var isSwitching = false;
 
 function initialize() {
   timestamp = (new Date()).getTime();
-  firebase.getHead(function (error, minVideo) {
+  firebase.getHead(function (error, minVideo, queue) {
     if (!error) {
       isPlaying = minVideo.id;
     }
@@ -23,8 +23,17 @@ function initialize() {
 initialize();
 
 function tick() {
-  firebase.getHead(function (error, minVideo) {
+  firebase.getHead(function (error, minVideo, queue) {
     if (!error) {
+      for (var u in queue) {
+        var tempVideo = queue[u];
+        if (tempVideo.id !== minVideo.id) {
+          if (!(tempVideo.strikes === 0) && Object.keys(tempVideo.strikes).length >= 3) {
+            // remove bad video
+            firebase.popQueue(tempVideo, true, function (error) {});
+          }
+        }
+      }
       // strike out
       if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
         firebase.popQueue(minVideo, true, function (error) {
@@ -157,7 +166,7 @@ exports.getStrikes = function(username, callback) {
 }
 
 exports.getTime = function(callback) {
-  firebase.getHead(function(error, minVideo) {
+  firebase.getHead(function(error, minVideo, queue) {
     if(error || isSwitching) {
       callback(0);
     } else {
@@ -172,7 +181,7 @@ exports.getTime = function(callback) {
 }
 
 exports.getProgress = function(callback) {
-  firebase.getHead(function(error, minVideo) {
+  firebase.getHead(function(error, minVideo, queue) {
     if(error || isSwitching) {
       callback("0 0");
     } else {
@@ -188,3 +197,4 @@ exports.getProgress = function(callback) {
 }
 
 exports.findUser = firebase.findUser;
+exports.updateUserStatus = firebase.updateUserStatus;

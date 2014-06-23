@@ -90,6 +90,20 @@ exports.getFirebase = function(req, res) {
   res.end();
 }
 
+exports.getUserStatus = function(req, res) {
+  model.updateUserStatus(req.user.username, "active", function(error, returnedStatus) {
+    var userStatus = "new";
+    if (returnedStatus) {
+      userStatus = returnedStatus;
+    }
+    res.writeHead(200, {
+      'Content-Length': userStatus.length,
+      'Content-Type': 'text/plain' })
+    res.write(userStatus);
+    res.end();
+  });
+}
+
 exports.register = function(req, res) {
   model.createUser(req.body.username, req.body.password, req.body.passwordconfirm, function(err) {
     if (err) {
