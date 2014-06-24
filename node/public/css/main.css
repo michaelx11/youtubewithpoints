@@ -181,13 +181,14 @@ h3 {
 
 .close-btn {
   background-image: url('../images/close-btn.png');
-  float: right;
   width: 30px;
   height: 30px;
   opacity: 0.6;
+  right: 0;
   background-size: 90%;
   margin: 10px;
   background-repeat: no-repeat;
+  position: fixed;
 }
 
 .score-btn {
