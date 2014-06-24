@@ -1,7 +1,7 @@
 $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('youtubewpoints-dev.firebaseio.com/');
+  var dataRef = new Firebase('youtubewithpoints.firebaseio.com/');
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'

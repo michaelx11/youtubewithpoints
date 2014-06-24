@@ -180,6 +180,10 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
 }
 
 function popQueue(videoObject, strikeOut, callback) {
+  if (videoObject.link === "http://www.youtube.com/embed/dpN3rJWlRx8") {
+    callback("Can't nope server messages");
+    return;
+  }
   root.child('queue').child(videoObject.id).remove(function() {
     if (videoObject.owner === RETRO_BOT) {
       callback(false);
