@@ -77,6 +77,10 @@ h3 {
   border-bottom: 1px solid #ddd;
 }
 
+.announcement-gray {
+  color: #7d7d7d;
+}
+
 .playlist-item:hover .strike {
   display: inline;
 }
@@ -282,10 +286,14 @@ td.points {
 
 .status-msg {
   width: 100%;
-  position: absolute;
-  bottom: 65px;
+  position: fixed;
+  bottom: 56px;
   text-align: center;
   color: #da0000;
+  background-color: rgba(255,255,255,1);
+  border-top: 1px solid #ddd;
+  padding: 6px;
+  display: none;
 }
 
 .status-msg .new-here {

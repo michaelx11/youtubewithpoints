@@ -1,7 +1,7 @@
 $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('youtubewithpoints.firebaseio.com/');
+  var dataRef = new Firebase('youtubewpoints-dev.firebaseio.com/');
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'
@@ -37,8 +37,10 @@ $(document).ready(function(){
     });
     $.post(url, data, function(msg) {
       if (msg !== '') {
+        if (msg.indexOf("<") > -1) {
+          msg = 'Error: Server probably restarted - please refresh your browser';
+        }
         $('.status-msg').text(msg);
-        $('.status-msg').css('font-size', '50px');
         $('.status-msg')
           .stop()
           .fadeIn(300)
@@ -187,10 +189,19 @@ $(document).ready(function(){
         playing = '';
       }
       
-      html += '<div class="playlist-item">';
+      var isAnnouncementVideo = "http://www.youtube.com/embed/dpN3rJWlRx8" === video.link;
+      if (isAnnouncementVideo) {
+        var strikeAble = '';
+        var announcementGray = ' announcement-gray';
+      } else {
+        var strikeAble = '<span class="strike ' + id + gray + '">' + strikeWord + '</span>';
+        var announcementGray = '';
+      }
+      
+      html += '<div class="playlist-item ' + announcementGray + '">';
       html += '<div class="isplaying play' + counter + '">' + playing + '</div> ';
       html += '<div class="uploader">' + video.owner.split(' ')[0] + '</div> ';
-      html += '<div class="title">' + video.name + '<span class="strike ' + id + gray + '">' + strikeWord + '</span></div> ';
+      html += '<div class="title">' + video.name + strikeAble + '</div> ';
       html += '</div>';
       playing = '';
       

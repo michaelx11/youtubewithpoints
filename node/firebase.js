@@ -41,9 +41,18 @@ var RATE_LIMIT = 5;
 var RETRO_BOT = "RetroBot";
 var SONG_BONUS = 5;
 var STRIKE_PENALTY = 1;
+var ADMIN = {'Michael Xu': true, 
+             'Victor Hung': true, 
+             'Stephanie Yu': true};
 
 function sanitizeUsername(username) {
   return username.replace(/[\[\]\.$#,]/g,'');
+}
+
+function hasAdminPrivileges (user) {
+  console.log(user);
+  console.log(user in ADMIN);
+  return user in ADMIN;
 }
 
 function createUserFb(username, id, callback) {
@@ -147,7 +156,7 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
           callback("Video too long.");
           return;
         }
-        if (duration < MIN_DURATION) {
+        if (duration < MIN_DURATION && !hasAdminPrivileges(owner)) {
           callback("Video too short.");
           return;
         }
