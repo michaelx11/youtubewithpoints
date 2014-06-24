@@ -94,7 +94,8 @@ $(document).ready(function(){
   });
   
   $('.close-btn').on('click', function() {
-    $('.scoreboard').animate({top: 1000}, 800);
+    $('.scoreboard').animate({top: 1200}, 800);
+    $('body').css({overflow: 'auto'});
   });
   
   $('.mute-btn').on('click', function() {
