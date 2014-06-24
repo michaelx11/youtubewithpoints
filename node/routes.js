@@ -3,7 +3,7 @@ var authConfig = require('./authConfig.js');
 
 exports.initialRouter = function(req, res, next) {
   if (req.url === '/login' || req.url === '/register' || (req.url.lastIndexOf('/auth/facebook', 0) === 0) ||
-      req.url === '/time') {
+      req.url === '/loggedin') {
     next();
   } else if (req.user) {
     console.log(req.user.username + " " + req.url);
@@ -145,4 +145,16 @@ exports.strike = function(req, res) {
     */
     res.end();
   });
+}
+
+exports.isLoggedIn = function(req, res) {
+  var loggedIn = "no";
+  if(req.user) {
+    var loggedIn = "yes";
+  }
+  res.writeHead(200, {
+    'Content-Length': loggedIn.length,
+    'Content-Type': 'text/plain' })
+  res.write(loggedIn);
+  res.end();
 }

@@ -76,7 +76,7 @@ app.post('/login', passport.authenticate('local', {
 }));
 */
 app.get('/viewer', routes.viewer);
-
+app.get('/loggedin', routes.isLoggedIn);
 app.get('/logout', routes.logout);
 app.get('/register', routes.readyRegister);
 app.post('/register', routes.register);

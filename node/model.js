@@ -41,8 +41,8 @@ function tick() {
           if (!error) {
             // get new timestamp
             timestamp = (new Date()).getTime();
-            isSwitching = false
           }
+          isSwitching = false
         });
       } else { // expire naturally
         var time = (new Date()).getTime();
@@ -55,8 +55,8 @@ function tick() {
             if (!error) {
               // get new timestamp
               timestamp = (new Date()).getTime();
-              isSwitching = false;
             }
+            isSwitching = false;
           });
         }
       }
@@ -71,6 +71,7 @@ function lonelyBot() {
         var keys = Object.keys(archive);
         var sample = Math.floor(Math.random() * keys.length);
         var randomVideo = archive[keys[sample]];
+        console.log(keys[sample] + " " + randomVideo.name);
         exports.submitVideo(RETRO_BOT, randomVideo.name, randomVideo.link, function(err) {});
       });
     }

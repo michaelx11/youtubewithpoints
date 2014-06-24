@@ -36,18 +36,25 @@ var http = require('http');
 
 var LIMIT = 2147483649;
 var MAX_DURATION = 1000;
-var RATE_LIMIT = 4;
+var MIN_DURATION = 75;
+var RATE_LIMIT = 5;
 var RETRO_BOT = "RetroBot";
 var SONG_BONUS = 5;
 var STRIKE_PENALTY = 1;
 
+function sanitizeUsername(username) {
+  return username.replace(/[\[\]\.$#]/g,'');
+}
+
 function createUserFb(username, id, callback) {
   findUser(id, function(notFound, foundUser) {
+    var cleanUsername = sanitizeUsername(username);
     if (notFound) {
       var user = {
         'id' : id,
-        'username' : username,
-        'score' : 0
+        'username' : cleanUsername,
+        'score' : 0,
+        'userStatus': 'new'
       };
 
       root.child('users').child(id).set(user);
@@ -137,7 +144,11 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
         var title = data.title;
         var duration = parseInt(data.duration);
         if (duration > MAX_DURATION) {
-          callback("Video too long");
+          callback("Video too long.");
+          return;
+        }
+        if (duration < MIN_DURATION) {
+          callback("Video too short.");
           return;
         }
 

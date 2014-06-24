@@ -58,6 +58,14 @@ $(document).ready(function(){
       $bar.stop().animate({width: '100%'}, timeToEnd, 'linear', function(){});
     });   
   }
+
+  var forceRefresh = function() {
+    $.get('/loggedin', function(data) {
+      if (data === 'no') {
+        location.reload();
+      }
+    });
+  }
   
   $.get('/userstatus', function(data) {
     if (data == "new") {
@@ -77,7 +85,7 @@ $(document).ready(function(){
   $('.score-btn').on('click', function() {
   console.log($('.scoreboard').css('top'));
     if ($('.scoreboard').css('top') == '0px') {
-      $('.scoreboard').animate({top: 1000}, 800);
+      $('.scoreboard').animate({top: 1200}, 800);
     } else {
       $('.scoreboard').animate({top: 0}, 800);
     }
@@ -148,6 +156,10 @@ $(document).ready(function(){
     var html = '';
     var counter = 0;
     var playing = PLAY_SYMBOL;
+
+    // force logged out users to relog when queue is touched
+    forceRefresh();
+    
     for (i in queue) {
       var id = i;
       var video = queue[i];
