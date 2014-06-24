@@ -86,8 +86,10 @@ $(document).ready(function(){
   console.log($('.scoreboard').css('top'));
     if ($('.scoreboard').css('top') == '0px') {
       $('.scoreboard').animate({top: 1200}, 800);
+      $('body').css({overflow: 'auto'});
     } else {
       $('.scoreboard').animate({top: 0}, 800);
+      $('body').css({overflow: 'hidden'});
     }
   });
   
