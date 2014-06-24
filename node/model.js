@@ -137,7 +137,7 @@ exports.submitVideo = function(username, videoName, linkName, callback) {
     if (containsVideo) {
       callback('Video already in queue.');
     } else {
-      firebase.submitVideo(username, videoName, constructedLink, function(err, user) {
+      firebase.submitVideo(firebase.sanitizeUsername(username), videoName, constructedLink, function(err, user) {
         callback(err);
       });
     }
@@ -151,19 +151,19 @@ exports.like = function(username, callback) {
 }
 
 exports.strike = function(username, songId, callback) {
-  firebase.strike(username, songId, function(error) {
+  firebase.strike(firebase.sanitizeUsername(username), songId, function(error) {
     callback(error);
   });
 }
 
 exports.getLikes = function(username, callback) {
-  firebase.getLikes(username, function(error, numLikes) {
+  firebase.getLikes(firebase.sanitizeUsername(username), function(error, numLikes) {
     callback(error, numLikes);
   });
 }
 
 exports.getStrikes = function(username, callback) {
-  firebase.getStrikes(username, function(error, numStrikes) {
+  firebase.getStrikes(firebase.sanitizeUsername(username), function(error, numStrikes) {
     callback(error, numStrikes);
   });
 }

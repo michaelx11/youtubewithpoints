@@ -43,7 +43,7 @@ var SONG_BONUS = 5;
 var STRIKE_PENALTY = 1;
 
 function sanitizeUsername(username) {
-  return username.replace(/[\[\]\.$#]/g,'');
+  return username.replace(/[\[\]\.$#,]/g,'');
 }
 
 function createUserFb(username, id, callback) {
@@ -185,8 +185,17 @@ function popQueue(videoObject, strikeOut, callback) {
         if (error) {
           callback(error);
         } else {
+          if (!owner) {
+            callback('Owner was not found, looking for: ' + videoObject.owner);
+            return;
+          }
+          if (!owner.id) {
+            callback('Owner Id not found! ' + owner.id);
+            return;
+          }
+          var sanitizedId = sanitizeUsername(owner.id);
           if (strikeOut) {
-            root.child('users').child(owner.id).child('score').transaction(function(score) {
+            root.child('users').child(sanitizedId).child('score').transaction(function(score) {
               return score - STRIKE_PENALTY;
             }, function(error, committed, snapshot) {
               // fail silently
@@ -196,7 +205,7 @@ function popQueue(videoObject, strikeOut, callback) {
             if (videoObject.likes === 0) {
               videoObject.likes = {};
             }
-            root.child('users').child(owner.id).child('score').transaction(function(score) {
+            root.child('users').child(sanitizedId).child('score').transaction(function(score) {
               return score + Object.keys(videoObject.likes).length + SONG_BONUS;
             }, function(error, committed, snapshot) {
               // fail silently
@@ -308,7 +317,7 @@ function submitVideo(owner, videoName, linkName, callback) {
       if (counter >= RATE_LIMIT) {
         callback("You have too many videos in the queue.");
       } else {
-        createVideo(owner, videoName, linkName, videoID, function(error) {
+        createVideo(sanitizeUsername(owner), videoName, linkName, videoID, function(error) {
           callback(error);
         });
       }
@@ -403,3 +412,4 @@ exports.getStrikes = getStrikes;
 exports.findVideoArchive = findVideoArchive
 exports.findVideoQueue = findVideoQueue
 exports.updateUserStatus = updateUserStatus
+exports.sanitizeUsername = sanitizeUsername
