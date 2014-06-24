@@ -38,6 +38,7 @@ $(document).ready(function(){
     $.post(url, data, function(msg) {
       if (msg !== '') {
         $('.status-msg').text(msg);
+        $('.status-msg').css('font-size', '50px');
         $('.status-msg')
           .stop()
           .fadeIn(300)
@@ -139,7 +140,7 @@ $(document).ready(function(){
   
   dataRef.child('users').on('value', function(snapshot) {
     var users = snapshot.val();
-    console.log(users);
+//    console.log(users);
     var sortable = [];
     for (var u in users)
       sortable.push([users[u].username, users[u].score])
@@ -170,7 +171,7 @@ $(document).ready(function(){
         video.strikes = {};
       }
       var strikes = Object.keys(video.strikes).length;
-      console.log(strikes);
+//      console.log(strikes);
       
       if (strikes > 3){
         strikes = 3;
