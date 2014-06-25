@@ -113,7 +113,7 @@ exports.getQueue = function(req, res) {
   model.getQueueMem(function(data) {
     var queueJson = JSON.stringify(data);
     res.writeHead(200, {
-    'Content-Length': queueJson.length,
+//    'Content-Length': queueJson.length,
     'Content-Type': 'application/json' })
     res.write(queueJson);
     res.end();
@@ -124,7 +124,7 @@ exports.getUsers = function(req, res) {
   model.getUsersMem(function(data) {
     var userJson = JSON.stringify(data);
     res.writeHead(200, {
-    'Content-Length': userJson.length,
+//    'Content-Length': userJson.length,
     'Content-Type': 'application/json' })
     res.write(userJson);
     res.end();

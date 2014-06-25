@@ -145,11 +145,11 @@ $(document).ready(function(){
     dataRef.child('changeflag').on('value', function(snapshot) {
       console.log("CHANGE FLAG DETECTED");
       $.get('/users', function(users) {
-        //    console.log(users);
         var sortable = [];
 
-        for (var u in users)
+        for (var u in users) {
           sortable.push([users[u].username, users[u].score])
+        }
 
         sortable.sort(function(a, b) {return b[1] - a[1]})
         var html = "<table>";

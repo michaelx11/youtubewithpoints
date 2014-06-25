@@ -98,7 +98,6 @@ firebaseRoot.child('flag').on('value', function(data) {
 
 
 function pushToFirebase() {
-  console.log("Pushing to firebase ...");
   try {
     // push the new items to archive
     for (var key in newArchive) {
@@ -132,7 +131,6 @@ function pushToFirebase() {
     console.log("FAILURE PUSHING QUEUE");
     console.log(e);
   }
-  console.log("Completed push to firebase.");
 }
 
 setInterval(pushToFirebase, PERSIST_INTERVAL);
