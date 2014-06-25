@@ -338,19 +338,13 @@ function submitVideo(owner, videoName, linkName, callback) {
   });
 }
 
-function like(username, callback) {
-  getHead(function(error, minVideo, queue) {
-    if (error) {
-      callback(error);
+function like(username, songId, callback) {
+  root.child('queue').child(songId).on('value', function(data) {
+    if (data.val() !== null) {
+      root.child('queue').child(songId).child('likes/' + username).set('liked');
+      callback(false);
     } else {
-      root.child('queue').child(songId).on('value', function(data) {
-        if (data.val() !== null) {
-          root.child('queue/' + minVideo.id + '/likes').child(username).set('liked');
-          callback(false);
-        } else {
-          callback(true);
-        }
-      });
+      callback('Song does not exist.');
     }
   });
 }

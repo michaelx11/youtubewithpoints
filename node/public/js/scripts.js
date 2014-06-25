@@ -135,6 +135,14 @@ $.get('/firebase', function(database){
     });
   });
   
+  $(document).on('click', '.rescueable', function(){
+    var id = $(this).attr('class').split(' ')[1];
+    var url = '/like';
+    var data = {songId: id};
+    $.post(url, data, function(e) {
+    });
+  });
+  
   dataRef.child('users').on('value', function(snapshot) {
     var users = snapshot.val();
 //    console.log(users);
@@ -167,11 +175,20 @@ $.get('/firebase', function(database){
     for (i in queue) {
       var id = i;
       var video = queue[i];
+      var rescueable = '';
+      
       if (video.strikes === 0) {
         video.strikes = {};
       }
+      
+      if (video.likes === 0) {
+        video.likes = {};
+      }
+      
       var strikes = Object.keys(video.strikes).length;
 //      console.log(strikes);
+      
+      strikes -= Object.keys(video.likes).length;
       
       if (strikes > 3){
         strikes = 3;
@@ -187,12 +204,17 @@ $.get('/firebase', function(database){
         playing = '';
       }
       
+      // This logic is really annoying. Please think before editing.
+      if (strikes > 0 && video.likes[user] == undefined && video.strikes[user] == undefined) {
+        var rescueable = '<span class="rescueable ' + id + '">rescue</span>';
+      }
+      
       var isAnnouncementVideo = "http://www.youtube.com/embed/dpN3rJWlRx8" === video.link;
       if (isAnnouncementVideo) {
         var strikeAble = '';
         var announcementGray = ' announcement-gray';
       } else {
-        var strikeAble = '<span class="strike ' + id + gray + '">' + strikeWord + '</span>';
+        var strikeAble = '<div class="operators"><span class="strike ' + id + gray + '">' + strikeWord + '</span> '+rescueable+'</div>';
         var announcementGray = '';
       }
       

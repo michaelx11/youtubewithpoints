@@ -144,8 +144,8 @@ exports.submitVideo = function(username, videoName, linkName, callback) {
   });
 }
 
-exports.like = function(username, callback) {
-  firebase.like(username, function(error) {
+exports.like = function(username, songId, callback) {
+  firebase.like(firebase.sanitizeUsername(username), songId, function(error) {
     callback(error);
   });
 }

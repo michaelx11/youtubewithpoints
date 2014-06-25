@@ -81,17 +81,23 @@ h3 {
   color: #7d7d7d;
 }
 
-.playlist-item:hover .strike {
-  display: inline;
+.playlist-item:hover .operators {
+  display: block;
 }
 
-.strike {
-  margin-left: 10px;
-  color: #da0000;
+.operators {
   display: none;
 }
 
-.strike:hover {
+.rescueable {
+  color: #00c2ad;
+}
+
+.strike {
+  color: #da0000;
+}
+
+.strike:hover, .rescueable:hover{
   cursor: pointer;
 }
 
@@ -279,7 +285,7 @@ td.points {
 }
 
 .fb-like:hover {
-  opacity: 0.9;
+  opacity: 1;
   -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }

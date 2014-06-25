@@ -126,7 +126,7 @@ exports.submit = function(req, res) {
 }
 
 exports.like = function(req, res) {
-  model.like(req.user.username, function(err) {
+  model.like(req.user.username, req.body.songId, function(err) {
     /*
     if (err) {
       res.send(err);
