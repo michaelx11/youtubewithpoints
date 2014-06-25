@@ -61,6 +61,11 @@ function sleep(millis) {
   }
 }
 
+function pushChangeFlag() {
+  firebaseRoot.child('changeflag').transaction(function(counter) {
+    return counter + 1;}, function(error, committed, snapshot) {});
+}
+
 function sanitize(str) {
   console.log(str);
   if (!str) {
@@ -72,7 +77,7 @@ function sanitize(str) {
 var initialized = false;
 
 function initializeRoot() {
-  firebaseRoot.on('value', function(data) {
+  firebaseRoot.once('value', function(data) {
     if (!data) {
       console.log("ROOT NODE COULD NOT BE OBTAINED, ABORT");
     }
@@ -126,6 +131,7 @@ function pushToFirebase() {
 
   try {
     // update queue info
+    console.log(root.queue);
     firebaseRoot.child('queue').set(root.queue);
   } catch(e) {
     console.log("FAILURE PUSHING QUEUE");
@@ -154,6 +160,7 @@ function createUserFb(username, id, callback) {
       };
 
       firebaseRoot.child('users').child(id).set(user);
+      pushChangeFlag();
       callback(false, user);
     } else {
       callback(false, foundUser);
@@ -173,6 +180,7 @@ function createUserFbMem(username, id, callback) {
       };
       root.users[id] = user;
       changedUsers[id] = true;
+      pushChangeFlag();
       callback(false, user);
     } else {
       callback(false, foundUser);
@@ -315,6 +323,7 @@ function createVideoMem(owner, defaultVideoName, linkName, Id, callback) {
           'id' : Id
         };
 
+        pushChangeFlag();
         callback(false);
       } catch (e) {
         console.log(e);
@@ -430,6 +439,7 @@ function popQueueMem(videoObject, strikeOut, callback) {
     });
   });
   delete root.queue[videoObject.id];
+  pushChangeFlag();
 }
 
 function getQueue(callback) {
@@ -636,22 +646,25 @@ function like(username, songId, callback) {
 }
 
 function likeMem(username, songId, callback) {
-  if (sanitize(songId) !== songId) {
-    callback('Invalid song id.');
-    return;
-  }
-  
-  var sanUsername = sanitize(username);
-  if (!root.queue || !root.queue[songId]) {
-    callback('Song does not exist.');
-    return;
-  }
-  var data = root.queue[songId];
-  if (data !== null) {
-    root.queue[songId]['likes'][sanUsername] = 'likes';
-    callback(false);
-  } else {
-    callback('Song does not exist.');
+  try {
+    var sanUsername = sanitize(username);
+    if (!root.queue || !root.queue[songId]) {
+      callback('Song does not exist.');
+      return;
+    }
+    var data = root.queue[songId];
+    if (data !== null) {
+      if (root.queue[songId]['likes'] === 0) {
+        root.queue[songId]['likes'] = {};
+      }
+      root.queue[songId]['likes'][sanUsername] = 'likes';
+      pushChangeFlag();
+      callback(false);
+    } else {
+      callback('Song does not exist.');
+    }
+  } catch (e) {
+    callback("Error liking song.");
   }
 }
 
@@ -672,22 +685,31 @@ function strike(username, songId, callback) {
 }
 
 function strikeMem(username, songId, callback) {
-  if (sanitize(songId) !== songId) {
-    callback('Invalid song id.');
-    return;
-  }
-  
-  var sanUsername = sanitize(username);
-  if (!root.queue || !root.queue[songId]) {
-    callback('Song does not exist.');
-    return;
-  }
-  var data = root.queue[songId];
-  if (data !== null) {
-    root.queue[songId]['strikes'][sanUsername] = 'striked';
-    callback(false);
-  } else {
-    callback('Song does not exist.');
+  try {
+    var sanUsername = sanitize(username);
+    if (!root.queue || !root.queue[songId]) {
+      callback('Song does not exist.');
+      console.log('B');
+      return;
+    }
+    var data = root.queue[songId];
+    if (data !== null) {
+      if (root.queue[songId]['strikes'] === 0) {
+        root.queue[songId]['strikes'] = {};
+      }
+      root.queue[songId]['strikes'][sanUsername] = 'striked';
+      console.log(root.queue);
+      console.log(root.queue[songId]);
+      console.log(root.queue[songId]['strikes']);
+      callback(false);
+      pushChangeFlag();
+      console.log('C');
+    } else {
+      callback('Song does not exist.');
+      console.log('D');
+    }
+  } catch (e) {
+    callback('ERROR STRIKING SONG');
   }
 }
 
