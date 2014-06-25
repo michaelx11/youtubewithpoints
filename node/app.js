@@ -55,13 +55,6 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-
-/*
-passport.use(routes.localStrategy);
-passport.serializeUser(function(user, done) { done(null, user.id) });
-passport.deserializeUser(routes.findUser);
-*/
-
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -69,18 +62,9 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.viewer);
 app.get('/login', routes.login);
-/*
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '/viewer',
-  failureRedirect: '/login'
-}));
-*/
 app.get('/viewer', routes.viewer);
 app.get('/loggedin', routes.isLoggedIn);
 app.get('/logout', routes.logout);
-app.get('/register', routes.readyRegister);
-app.post('/register', routes.register);
-app.get('/submit', routes.readySubmit);
 app.post('/submit', routes.submit);
 app.post('/like', routes.like);
 app.post('/strike', routes.strike);
@@ -92,6 +76,8 @@ app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/viewer',
       failureRedirect: '/login' }))
+app.get('/queue', routes.getQueue);
+app.get('/users', routes.getUsers);
 
 http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));

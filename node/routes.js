@@ -16,6 +16,7 @@ exports.initialRouter = function(req, res, next) {
 exports.localStrategy = model.localStrategy;
 
 exports.findUser = model.findUser;
+exports.findUserMem = model.findUserMem;
 
 exports.viewer = function(req, res) {
   if (req.user) {
@@ -38,25 +39,6 @@ exports.logout = function(req, res) {
     req.logout();
     res.redirect('/login');
   });
-}
-
-exports.readyRegister = function(req, res) {
-  res.render('ready_register.html', {user: req.user});
-}
-
-exports.readySubmit = function(req, res) {
-  var problem = req.query.problem;
-  res.render('ready_submit.html');
-  /*
-     model.listProblems(req.user, function(err, problems) {
-     res.render('ready_submit.html', {
-     user: req.user,
-     problem: problems[problem],
-     problems: problems,
-     problemScoreboard: model.getProblemScoreboard(problem)
-     });
-     });
-     */
 }
 
 exports.time = function(req, res) {
@@ -104,16 +86,6 @@ exports.getUserStatus = function(req, res) {
   });
 }
 
-exports.register = function(req, res) {
-  model.createUser(req.body.username, req.body.password, req.body.passwordconfirm, function(err) {
-    if (err) {
-      res.render('ready_register.html', {user: req.user, error: err});
-    } else {
-      res.render('register.html', {user: req.user, error: err});
-    }
-  });
-}
-
 exports.submit = function(req, res) {
   var link = req.body.link;
   model.submitVideo(req.user.username, link, link, function(err) {
@@ -126,23 +98,35 @@ exports.submit = function(req, res) {
 }
 
 exports.like = function(req, res) {
-  model.like(req.user.username, req.body.songId, function(err) {
-    /*
-    if (err) {
-      res.send(err);
-    }
-    */
+  model.like(req.user.username, function(err) {
     res.end();
   });
 }
 
 exports.strike = function(req, res) {
   model.strike(req.user.username, req.body.songId, function(err) {
-    /*
-    if (err) {
-      res.send(err);
-    }
-    */
+    res.end();
+  });
+}
+
+exports.getQueue = function(req, res) {
+  model.getQueueMem(function(data) {
+    var queueJson = JSON.stringify(data);
+    res.writeHead(200, {
+    'Content-Length': queueJson.length,
+    'Content-Type': 'application/json' })
+    res.write(queueJson);
+    res.end();
+  });
+}
+
+exports.getUsers = function(req, res) {
+  model.getUsersMem(function(data) {
+    var userJson = JSON.stringify(data);
+    res.writeHead(200, {
+    'Content-Length': userJson.length,
+    'Content-Type': 'application/json' })
+    res.write(userJson);
     res.end();
   });
 }

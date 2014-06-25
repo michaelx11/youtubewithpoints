@@ -1,6 +1,5 @@
 var firebase = require('./firebase');
 var LocalStrategy = require('passport-local').Strategy;
-var bcrypt = require('bcrypt');
 
 var RETRO_BOT = "RetroBot";
 
@@ -14,7 +13,7 @@ var isSwitching = false;
 
 function initialize() {
   timestamp = (new Date()).getTime();
-  firebase.getHead(function (error, minVideo, queue) {
+  firebase.getHeadMem(function (error, minVideo, queue) {
     if (!error) {
       isPlaying = minVideo.id;
     }
@@ -23,21 +22,21 @@ function initialize() {
 initialize();
 
 function tick() {
-  firebase.getHead(function (error, minVideo, queue) {
+  firebase.getHeadMem(function (error, minVideo, queue) {
     if (!error) {
       for (var u in queue) {
         var tempVideo = queue[u];
         if (tempVideo.id !== minVideo.id) {
           if (!(tempVideo.strikes === 0) && Object.keys(tempVideo.strikes).length >= 3) {
             // remove bad video
-            firebase.popQueue(tempVideo, true, function (error) {});
+            firebase.popQueueMem(tempVideo, true, function (error) {});
           }
         }
       }
       // strike out
       if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
           isSwitching = true;
-        firebase.popQueue(minVideo, true, function (error) {
+        firebase.popQueueMem(minVideo, true, function (error) {
           if (!error) {
             // get new timestamp
             timestamp = (new Date()).getTime();
@@ -51,7 +50,7 @@ function tick() {
         if (time > duration + timestamp + BUFFER_TIME) {
           isSwitching = true;
           // remove the oldest video
-          firebase.popQueue(minVideo, false, function (error) {
+          firebase.popQueueMem(minVideo, false, function (error) {
             if (!error) {
               // get new timestamp
               timestamp = (new Date()).getTime();
@@ -65,9 +64,9 @@ function tick() {
 }
 
 function lonelyBot() {
-  firebase.getQueue(function (queue) {
+  firebase.getQueueMem(function (queue) {
     if (!queue) {
-      firebase.getArchive(function (archive) {
+      firebase.getArchiveMem(function (archive) {
         var keys = Object.keys(archive);
         var sample = Math.floor(Math.random() * keys.length);
         var randomVideo = archive[keys[sample]];
@@ -82,7 +81,7 @@ setInterval(tick, TICK_INTERVAL);
 setInterval(lonelyBot, LONELY_INTERVAL);
 
 exports.localStrategy = new LocalStrategy(function(username, password, callback) {
-  firebase.getUser(username, function(err, user) {
+  firebase.getUserMem(username, function(err, user) {
     if (user) {
       bcrypt.compare(password, user.pwHash, function(err, authenticated) {
         if (authenticated) {
@@ -106,11 +105,11 @@ exports.createUser = function(username, password, passwordconfirm, callback) {
     callback('Passwords don\'t match');
     return;
   }
-  firebase.getUser(username, function(err, user) {
+  firebase.getUserMem(username, function(err, user) {
     if (user) {
       callback('Username already exists');
     } else {
-      firebase.createUser(username, bcrypt.hashSync(password, 10), function(err) {
+      firebase.createUserMem(username, bcrypt.hashSync(password, 10), function(err) {
         callback(err);
       });
     }
@@ -133,11 +132,11 @@ exports.submitVideo = function(username, videoName, linkName, callback) {
     idChunk = match[1];
   }
   var constructedLink = "http://www.youtube.com/embed/" + idChunk;
-  firebase.findVideoQueue(constructedLink, function(containsVideo) {
+  firebase.findVideoQueueMem(constructedLink, function(containsVideo) {
     if (containsVideo) {
       callback('Video already in queue.');
     } else {
-      firebase.submitVideo(firebase.sanitizeUsername(username), videoName, constructedLink, function(err, user) {
+      firebase.submitVideoMem(firebase.sanitize(username), videoName, constructedLink, function(err, user) {
         callback(err);
       });
     }
@@ -145,31 +144,31 @@ exports.submitVideo = function(username, videoName, linkName, callback) {
 }
 
 exports.like = function(username, songId, callback) {
-  firebase.like(firebase.sanitizeUsername(username), songId, function(error) {
+  firebase.likeMem(firebase.sanitize(username), function(error) {
     callback(error);
   });
 }
 
 exports.strike = function(username, songId, callback) {
-  firebase.strike(firebase.sanitizeUsername(username), songId, function(error) {
+  firebase.strikeMem(firebase.sanitize(username), songId, function(error) {
     callback(error);
   });
 }
 
 exports.getLikes = function(username, callback) {
-  firebase.getLikes(firebase.sanitizeUsername(username), function(error, numLikes) {
+  firebase.getLikesMem(firebase.sanitize(username), function(error, numLikes) {
     callback(error, numLikes);
   });
 }
 
 exports.getStrikes = function(username, callback) {
-  firebase.getStrikes(firebase.sanitizeUsername(username), function(error, numStrikes) {
+  firebase.getStrikesMem(firebase.sanitize(username), function(error, numStrikes) {
     callback(error, numStrikes);
   });
 }
 
 exports.getTime = function(callback) {
-  firebase.getHead(function(error, minVideo, queue) {
+  firebase.getHeadMem(function(error, minVideo, queue) {
     if(error || isSwitching) {
       callback(0);
     } else {
@@ -184,7 +183,7 @@ exports.getTime = function(callback) {
 }
 
 exports.getProgress = function(callback) {
-  firebase.getHead(function(error, minVideo, queue) {
+  firebase.getHeadMem(function(error, minVideo, queue) {
     if(error) {
       callback("0 99999999");
     } else {
@@ -204,4 +203,8 @@ exports.getProgress = function(callback) {
 }
 
 exports.findUser = firebase.findUser;
+exports.findUserMem = firebase.findUserMem;
 exports.updateUserStatus = firebase.updateUserStatus;
+exports.updateUserStatusMem = firebase.updateUserStatusMem;
+exports.getQueueMem = firebase.getQueueMem;
+exports.getUsersMem = firebase.getUsersMem;
