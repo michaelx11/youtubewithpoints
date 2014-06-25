@@ -146,7 +146,10 @@ $.get('/firebase', function(database){
     for (i in sortable) {
       var u = getFormattedName(sortable[i][0]);
       var s = sortable[i][1];
-      html += '<tr><td>' + u + '</td><td class="points">' + s + '</td></tr>';
+      var yourself = '';
+      if (sortable[i][0] === user)
+        var yourself = 'class="yourself"';
+      html += '<tr ' + yourself + '><td>' + u + '</td><td class="points">' + s + '</td></tr>';
     }
     html += "</table>";
     $('.score-container').html(html);
