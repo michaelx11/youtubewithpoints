@@ -1,7 +1,7 @@
 $(document).ready(function(){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('youtubewithpoints.firebaseio.com/');
+  var dataRef = new Firebase('youtubewpoints-dev.firebaseio.com/');
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'
@@ -60,6 +60,11 @@ $(document).ready(function(){
       $bar.css({width: currentWidth});
       $bar.stop().animate({width: '100%'}, timeToEnd, 'linear', function(){});
     });   
+  }
+
+  var getFormattedName = function(n) {
+    var nameChunks = n.split(' ');
+    return nameChunks[0] + ' ' + nameChunks[nameChunks.length-1].charAt(0);
   }
 
   var forceRefresh = function() {
@@ -149,7 +154,7 @@ $(document).ready(function(){
     sortable.sort(function(a, b) {return b[1] - a[1]})
     var html = "<table>";
     for (i in sortable) {
-      var u = sortable[i][0].split(' ')[0] + ' ' + sortable[i][0].split(' ')[1][0];
+      var u = getFormattedName(sortable[i][0]);
       var s = sortable[i][1];
       html += '<tr><td>' + u + '</td><td class="points">' + s + '</td></tr>';
     }
@@ -200,7 +205,7 @@ $(document).ready(function(){
       
       html += '<div class="playlist-item ' + announcementGray + '">';
       html += '<div class="isplaying play' + counter + '">' + playing + '</div> ';
-      html += '<div class="uploader">' + video.owner.split(' ')[0] + '</div> ';
+      html += '<div class="uploader">' + getFormattedName(video.owner) + '</div> ';
       html += '<div class="title">' + video.name + strikeAble + '</div> ';
       html += '</div>';
       playing = '';
