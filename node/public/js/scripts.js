@@ -1,32 +1,12 @@
 $(document).ready(function(){
+$.get('/firebase', function(database){
   var playingVideo = '';
   var playingVideoLink = '';
-  var dataRef = new Firebase('youtubewpoints-dev.firebaseio.com/');
+  var dataRef = new Firebase(database);
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'
-  
-  /***
-  Number People Online Counter
-  ***/
-  /*
-  var listRef = dataRef;
-  var userRef = listRef.push();
-  // Add ourselves to presence list when online.
-  var presenceRef = new Firebase("https://youtubewithpoints.firebaseio.com/.info/connected");
-  presenceRef.on("value", function(snap) {
-    if (snap.val()) {
-      userRef.set(true);
-      // Remove ourselves when we disconnect.
-      userRef.onDisconnect().remove();
-    }
-  });
-  // Number of online users is the number of objects in the presence list.
-  listRef.on("value", function(snap) {
-    console.log("# of online users = " + (snap.numChildren() - 4));
-  });    
-  */
-  
+
   var submitLink = function() {
     var youtubeLink = $('.url-input').val();
     var url = '/submit';
@@ -48,6 +28,27 @@ $(document).ready(function(){
           .fadeOut(300);
       }
     });
+  }
+  
+  var toggleMute = function() {
+  if (!mute) {
+      $('#ytplayer').attr('src','');
+      $('.play0').text('');
+      $('.mute-btn').css('background-position', '0px');
+      mute = true;
+    } else {
+      $('.play0').html(PLAY_SYMBOL);
+      var url = '/time';
+      $.get(url, function(data){
+        playingVideo = playingVideoLink + '?autoplay=1&' + data;
+        console.log(playingVideo);
+        $('#ytplayer').attr('src',playingVideo);
+        generateProgressBar();
+      })
+          
+      $('.mute-btn').css('background-position', '-30px');
+      mute = false;
+    }
   }
   
   var generateProgressBar = function() {
@@ -107,24 +108,7 @@ $(document).ready(function(){
   });
   
   $('.mute-btn').on('click', function() {
-    if (!mute) {
-      $('#ytplayer').attr('src','');
-      $('.play0').text('');
-      $(this).css('background-position', '0px');
-      mute = true;
-    } else {
-      $('.play0').html(PLAY_SYMBOL);
-      var url = '/time';
-      $.get(url, function(data){
-        playingVideo = playingVideoLink + '?autoplay=1&' + data;
-        console.log(playingVideo);
-        $('#ytplayer').attr('src',playingVideo);
-        generateProgressBar();
-      })
-          
-      $(this).css('background-position', '-30px');
-      mute = false;
-    }
+    toggleMute();
   });
   
   $('.url-input').keypress(function(e) {
@@ -132,6 +116,12 @@ $(document).ready(function(){
       submitLink();
     }
   });
+  
+  $(document).keypress(function(e) {
+    if (e.which == 32) {
+      toggleMute();
+    }
+  })
   
   $('.submit-footer-btn').on('click', function(){
     submitLink();
@@ -228,4 +218,5 @@ $(document).ready(function(){
     }
     $('.populated-playlist').html(html);
   });
+});
 });
