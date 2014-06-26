@@ -3,12 +3,14 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
 var RETRO_BOT = "Jeremy L";
+var FAKE_USERS = [RETRO_BOT, "Evelyn K", "Ben F", "Karl L", "Jackie S", "Charles W", "Felix S", "Ralph C"];
 
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
 var TICK_INTERVAL = 2 * 1000;
 var LONELY_INTERVAL = 3 * 1000;
 var DELAY_ALLOWANCE = 5;
+var QUEUE_LENGTH_CUTOFF = 10;
 
 var isSwitching = false;
 
@@ -16,7 +18,7 @@ function initialize() {
   timestamp = (new Date()).getTime();
   firebase.getHead(function (error, minVideo, queue) {
     if (!error) {
-      isPlaying = minVideo.id;
+      var isPlaying = minVideo.id;
     }
   });
 }
@@ -24,7 +26,7 @@ initialize();
 
 function tick() {
   firebase.getHead(function (error, minVideo, queue) {
-    if (!error) {
+    if (!error && !isSwitching) {
       for (var u in queue) {
         var tempVideo = queue[u];
         if (tempVideo.id !== minVideo.id) {
@@ -36,7 +38,7 @@ function tick() {
       }
       // strike out
       if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
-          isSwitching = true;
+        isSwitching = true;
         firebase.popQueue(minVideo, true, function (error) {
           if (!error) {
             // get new timestamp
@@ -66,11 +68,19 @@ function tick() {
 
 function lonelyBot() {
   firebase.getQueue(function (queue) {
-    if (!queue) {
-      firebase.getRandomFromArchive(function (video) {
-        console.log(video);
-        exports.submitVideo(RETRO_BOT, video.name, video.link, function(err) {});
-      });
+    var qLen = 0;
+    if (queue) {
+      qLen = Object.keys(queue).length;
+    }
+    if (qLen <= QUEUE_LENGTH_CUTOFF) {
+      if (Math.random() > Math.pow(qLen * .1, .2)) {
+        var index = Math.floor(Math.random() * FAKE_USERS.length);
+        var FAKE_USER_NAME = FAKE_USER[index];
+        firebase.getRandomFromArchive(function (video) {
+          console.log(video);
+          exports.submitVideo(FAKE_USER_NAME, video.name, video.link, function(err) {});
+        });
+      }
     }
   })
 }

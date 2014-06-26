@@ -39,6 +39,8 @@ var MAX_DURATION = 1000;
 var MIN_DURATION = 75;
 var RATE_LIMIT = 5;
 var RETRO_BOT = "Jeremy L";
+var FAKE_USERS = [RETRO_BOT, "Evelyn K", "Ben F", "Karl L", "Jackie S", "Charles W", "Felix S", "Ralph C"];
+
 var SONG_BONUS = 5;
 var STRIKE_PENALTY = 1;
 var ADMIN = {'Michael Xu': true, 
@@ -185,12 +187,13 @@ function popQueue(videoObject, strikeOut, callback) {
     return;
   }
   root.child('queue').child(videoObject.id).remove(function() {
-    if (videoObject.owner === RETRO_BOT) {
+    if ('retroId' in videoObject || FAKE_USERS.indexOf(videoObject.owner) > -1) {
       callback(false);
       return;
     }
     findVideoArchive(videoObject.link, function(contained) {
-      if (!contained && !strikeOut) {
+      if (!contained && !strikeOut && !('retroId' in videoObject)) {
+        videoObject['retroId'] = videoObject.id;
         root.child('archive').child(videoObject.id).set(videoObject);
       }
 
@@ -233,8 +236,8 @@ function popQueue(videoObject, strikeOut, callback) {
 
 function getRandomFromArchive(callback) {
   var i = 100;
-  var min = 1659;
-  var max = 1665;
+  var min = 1633;
+  var max = 1900;
   var randSongId = Math.floor(Math.random()*(max-min+1)+min);
   console.log('ATTEMPTING SONG: ' + randSongId);
   root.child('archive/' + randSongId).once('value', function(data) {
@@ -261,7 +264,8 @@ function getQueue(callback) {
 function getArchive(callback) {
   root.child('archive').once('value', function(data) {
     if (data) {
-      callback(data.val());
+      callback(false);
+//      callback(data.val());
     } else {
       callback(null);
     }
