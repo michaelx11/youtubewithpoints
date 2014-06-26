@@ -445,12 +445,13 @@ function star(username, songId, title, link, callback) {
               return;
             }
           }
-          root.child('users/' + user.id + '/stars/' + sanSongId).set({
-            'title': title,
-            'link': link,
-            'id': sanSongId
-          });
         }
+
+        root.child('users/' + user.id + '/stars/' + sanSongId).set({
+          'title': title,
+          'link': link,
+          'id': sanSongId
+        });
       });
     } else {
       callback("Error starring video.");
