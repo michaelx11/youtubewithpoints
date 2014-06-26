@@ -59,9 +59,8 @@ h3 {
 .playlist-container {
   width: 700px;
   margin: 0 auto;
-  padding-bottom: 55px;
+  padding-bottom: 200px;
   text-align: left;
-  padding-bottom: 55px;
 }
 
 .playlist-heading {
@@ -459,16 +458,19 @@ a {
   margin: 0 auto;
   position: absolute;
   bottom: 10px;
+  max-height: 200px;
+  overflow: scroll;
 }
 .star-list-item {
   border-bottom: 1px solid #555;
   padding: 8px 8px;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0,0,0,0.7);
 }
 .star-list-item:hover {
   background-color: rgba(0,0,0,0.9);
   cursor: pointer;
 }
+
 .star-list-item:nth-child(1) {
   border-radius: 2px 2px 0 0;
 }

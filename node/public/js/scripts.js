@@ -70,9 +70,11 @@ $.get('/firebase', function(database){
     });   
   }
 
-  var generateStarList = function() {
+  var generateStarList = function() { 
+    console.log('generating...');
     var html = '';
-    $.get('/getstars', function(data) {
+    $.get('/getstars', function(data) { 
+    console.log('getstar...');
       window.allStars = data;
       for (id in data) {
         var title = data[id].title;
@@ -92,8 +94,13 @@ $.get('/firebase', function(database){
           }
         }
         var stardiv = '<div class="in-list star star' + id + ' ' + starredClass + '" ' + dataForStar + '></div>';
+        var regexp = /embed\/([\w-_]+)/
+        var youtubelink = '<a class="ext" target="_blank" href="http://youtube.com/watch?v='+regexp.exec(link)[1]+'">open in youtube</a>';
         
-        html += '<div class="star-list-item" data-link="'+link+'">'+stardiv+title+'</div>'
+        // REMOVE NEXT LINE TO ALLOW OPEN IN YOUTUBE LINK
+        var youtubelink = '';
+        
+        html += '<div class="star-list-item" data-link="'+link+'">'+stardiv+title+youtubelink+'</div>'
       }
       $('.star-list').html(html);
     })
@@ -130,15 +137,18 @@ $.get('/firebase', function(database){
   $('.score-btn').on('click', function() {
   console.log($('.scoreboard').css('top'));
     if ($('.scoreboard').css('top') == '0px') {
+      $('.scoreboard-footer').fadeOut();
       $('.scoreboard').animate({top: 1200}, 800);
       $('body').css({overflow: 'auto'});
     } else {
+      $('.scoreboard-footer').fadeIn();
       $('.scoreboard').animate({top: 0}, 800);
       $('body').css({overflow: 'hidden'});
     }
   });
   
   $('.close-btn').on('click', function() {
+    $('.scoreboard-footer').fadeOut();
     $('.scoreboard').animate({top: 1200}, 800);
     $('body').css({overflow: 'auto'});
   });
@@ -151,6 +161,7 @@ $.get('/firebase', function(database){
     if(e.which == 13) {
       submitLink();
     }
+    $('.star-list').html('');
   });
   
   
@@ -178,7 +189,7 @@ $.get('/firebase', function(database){
     submitLink();
   });
   
-  $(document).on('click', '.star', function() {
+  $(document).on('click', '.star', function(e) {
     var l = unescape($(this).data('link'));
     var t = unescape($(this).data('title'));
     var s = unescape($(this).data('songid'));
@@ -186,7 +197,16 @@ $.get('/firebase', function(database){
       var url = '/unstar';
       $(this).removeClass('star-starred');
       $('.star' + s).removeClass('star-starred');
+      e.stopPropagation();
     } else {
+    
+      
+      // shiny effect because i want to
+      $('.url-input-overlay')
+        .stop()
+        .fadeTo(100, 0.3)
+        .fadeOut(400);
+        
       var url = '/star';
       $(this).addClass('star-starred');
       $('.star' + s).addClass('star-starred');
@@ -196,12 +216,9 @@ $.get('/firebase', function(database){
       $.get('/getstars', function(data) {
         window.allStars = data;
       });
+      
     }).fail(function(b, e){ 
       console.log(e);
-      $('.url-input-overlay')
-        .stop()
-        .fadeTo(100, 0.5)
-        .fadeOut(100);
     });
   });
   
@@ -305,6 +322,10 @@ $.get('/firebase', function(database){
         }
       }
       var stardiv = '<div class="star star' + id + ' ' + starredClass + '" ' + dataForStar + '></div>';
+      
+      // TO REENABLE RESCUEING, SIMPLY REMOVE THE FOLLOWING LINE.
+      // BUT THIS HAS BEEN TAKEN OUT UNTIL WE DO SOME TESTING
+      rescueable = '';
       
       var isAnnouncementVideo = "http://www.youtube.com/embed/dpN3rJWlRx8" === video.link;
       if (isAnnouncementVideo) {
