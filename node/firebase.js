@@ -436,10 +436,21 @@ function star(username, songId, title, link, callback) {
       return;
     }
     if (user && sanSongId && title && link) {
-      root.child('users/' + user.id + '/stars/' + sanSongId).set({
-        'title': title,
-        'link': link,
-        'id': sanSongId
+      root.child('users/' + user.id + '/stars').once('value', function(starsData) {
+        if (starsData && starsData.val()) {
+          var stars = starsData.val();
+          for (var key in stars) {
+            if (stars[key].link === link) {
+              callback("Already starred.");
+              return;
+            }
+          }
+          root.child('users/' + user.id + '/stars/' + sanSongId).set({
+            'title': title,
+            'link': link,
+            'id': sanSongId
+          });
+        }
       });
     } else {
       callback("Error starring video.");
@@ -447,22 +458,25 @@ function star(username, songId, title, link, callback) {
   });
 }
 
-function unstar(username, songId, callback) {
+function unstar(username, link, callback) {
   var sanUsername = sanitizeUsername(""+username);
-  var sanSongId = sanitizeUsername(""+songId);
   getUser(sanUsername, function(error, user) {
     if (error) {
       callback(error);
       return;
     }
     if (user) {
-      root.child('users/' + user.id + '/stars/' + sanSongId).remove(
-        function(error) {
-          if (error) {
-            callback(error);
-          } else {
-            callback(false);
+      root.child('users/' + user.id + '/stars/').once('value', 
+        function(starsData) {
+          if (starsData && starsData.val()) {
+            var stars = starsData.val();
+            for (var key in stars) {
+              if (stars[key].link === link) {
+                root.child('users/' + user.id + '/stars/' + key).remove();
+              }
+            }
           }
+          callback(false);
         }
       );
     } else {
