@@ -38,6 +38,9 @@ var LIMIT = 2147483649;
 var MAX_DURATION = 1000;
 var MIN_DURATION = 75;
 var RATE_LIMIT = 5;
+
+var ARCHIVE_RANGE_MIN = 1633;
+var ARCHIVE_RANGE_MAX = 1900;
 var RETRO_BOT = "Jeremy L";
 var FAKE_USERS = [RETRO_BOT, "Evelyn K", "Ben F", "Karl L", "Jackie S", "Charles W", "Felix S", "Ralph C"];
 
@@ -236,8 +239,8 @@ function popQueue(videoObject, strikeOut, callback) {
 
 function getRandomFromArchive(callback) {
   var i = 100;
-  var min = 1633;
-  var max = 1900;
+  var min = ARCHIVE_RANGE_MIN;
+  var max = ARCHIVE_RANGE_MAX;
   var randSongId = Math.floor(Math.random()*(max-min+1)+min);
   console.log('ATTEMPTING SONG: ' + randSongId);
   root.child('archive/' + randSongId).once('value', function(data) {

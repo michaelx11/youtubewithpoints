@@ -10,7 +10,10 @@ var BUFFER_TIME = 5 * 1000;
 var TICK_INTERVAL = 2 * 1000;
 var LONELY_INTERVAL = 3 * 1000;
 var DELAY_ALLOWANCE = 5;
-var QUEUE_LENGTH_CUTOFF = 10;
+var QUEUE_LENGTH_CUTOFF = 8;
+
+var currentStreak = 0;
+var currentUser = "";
 
 var isSwitching = false;
 
@@ -73,12 +76,16 @@ function lonelyBot() {
       qLen = Object.keys(queue).length;
     }
     if (qLen <= QUEUE_LENGTH_CUTOFF) {
-      if (Math.random() > Math.pow(qLen * .1, .2)) {
-        var index = Math.floor(Math.random() * FAKE_USERS.length);
-        var FAKE_USER_NAME = FAKE_USERS[index];
+      if (Math.random() > Math.pow(qLen * .17, .12)) {
+        if (currentStreak <= 0) {
+          var index = Math.floor(Math.random() * FAKE_USERS.length);
+          currentUser = FAKE_USERS[index];
+          currentStreak = Math.floor(Math.random() * 4 + 1);
+        }
+        currentStreak--;
         firebase.getRandomFromArchive(function (video) {
           console.log(video);
-          exports.submitVideo(FAKE_USER_NAME, video.name, video.link, function(err) {});
+          exports.submitVideo(currentUser, video.name, video.link, function(err) {});
         });
       }
     }
