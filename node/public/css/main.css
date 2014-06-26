@@ -89,10 +89,6 @@ h3 {
   display: block;
 }
 
-.playlist-item:hover .star {
-  display: inline-block;
-}
-
 .operators {
   display: none;
 }
@@ -109,19 +105,6 @@ h3 {
   cursor: pointer;
 }
 
-.star {
-  height: 20px;
-  width: 20px;
-  float: left;
-  margin-right: 10px;
-  background-image: url('../images/stars.png');
-  background-size: 200%;
-  background-position: 21px;
-  display: none;
-}
-.star:hover {
-  background-position: 0px;
-}
 
 .playlist-item .gray-out {
   color: #ccc;
@@ -452,4 +435,48 @@ a {
 }
 .yourself {
   color: #ffe400;
+}
+
+/** STAR LIST CSS **/
+
+.star {
+  height: 20px;
+  width: 20px;
+  float: left;
+  margin-right: 10px;
+  background-image: url('../images/stars.png');
+  background-size: 200%;
+  background-position: 20px;
+}
+
+.star-starred {
+  background-position: 0px;
+}
+
+.star-list {
+  color: #eee;
+  width: 566px;
+  margin: 0 auto;
+  position: absolute;
+  bottom: 10px;
+}
+.star-list-item {
+  border-bottom: 1px solid #555;
+  padding: 8px 8px;
+  background-color: rgba(0,0,0,0.8);
+}
+.star-list-item:hover {
+  background-color: rgba(0,0,0,0.9);
+  cursor: pointer;
+}
+.star-list-item:nth-child(1) {
+  border-radius: 2px 2px 0 0;
+}
+
+.star-list-item:nth-last-child(1) {
+  border-radius: 0 0 2px 2px;
+  border: none;
+}
+.in-list:hover {
+  background-position: 20px 0;
 }

@@ -6,7 +6,13 @@ $.get('/firebase', function(database){
   var strikeWords = ['nope', 'doubly nope', 'goodbye', 'leaving...'];
   var mute = false;
   var PLAY_SYMBOL = '&#9658;'
-
+  
+  var allStars = {};
+  
+  $.get('/getstars', function(data) {
+    window.allStars = data;
+  });
+  
   var submitLink = function() {
     var youtubeLink = $('.url-input').val();
     var url = '/submit';
@@ -64,6 +70,35 @@ $.get('/firebase', function(database){
     });   
   }
 
+  var generateStarList = function() {
+    var html = '';
+    $.get('/getstars', function(data) {
+      window.allStars = data;
+      for (id in data) {
+        var title = data[id].title;
+        var link = data[id].link;
+        
+        
+        // STAR GENERATION SCRIPT VERSION 0.2
+        // WHY YES, THIS CODE IS THE SAME AS BELOW. GOOD LUCK FUTURE DEV.
+        var dataForStar = 'data-link="' + escape(link) + '"';
+        dataForStar += 'data-title="' + escape(title) + '"';
+        dataForStar += 'data-songid="' + escape(id) + '"';
+        var starredClass = '';
+        var allStars = data;
+        for (id in allStars) {
+          if (allStars[id].link === link) {
+            starredClass = 'star-starred';
+          }
+        }
+        var stardiv = '<div class="in-list star star' + id + ' ' + starredClass + '" ' + dataForStar + '></div>';
+        
+        html += '<div class="star-list-item" data-link="'+link+'">'+stardiv+title+'</div>'
+      }
+      $('.star-list').html(html);
+    })
+  }
+
   var getFormattedName = function(n) {
     var nameChunks = n.split(' ');
     return nameChunks[0] + ' ' + nameChunks[nameChunks.length-1].charAt(0);
@@ -118,6 +153,21 @@ $.get('/firebase', function(database){
     }
   });
   
+  
+  // this bit of code will be interesting
+  $('.url-input').focusout(function() {
+    setTimeout(function(){$('.star-list').html('')},100);
+  })
+  
+  
+  $(document).on('click', '.star-list-item', function() {
+    var link = $(this).data('link');
+    $('.url-input').val(link);
+    console.log(link);
+    $('.star-list').html('');
+  });
+  
+  
   $(document).keypress(function(e) {
     if (e.which == 32) {
       toggleMute();
@@ -132,10 +182,20 @@ $.get('/firebase', function(database){
     var l = unescape($(this).data('link'));
     var t = unescape($(this).data('title'));
     var s = unescape($(this).data('songid'));
-    var url = '/star';
+    if ($(this).hasClass('star-starred')) {
+      var url = '/unstar';
+      $(this).removeClass('star-starred');
+      $('.star' + s).removeClass('star-starred');
+    } else {
+      var url = '/star';
+      $(this).addClass('star-starred');
+      $('.star' + s).addClass('star-starred');
+    }
     var data = {link: l, title: t, songId: s};
     $.post(url, data, function(e) {
-      
+      $.get('/getstars', function(data) {
+        window.allStars = data;
+      });
     }).fail(function(b, e){ 
       console.log(e);
       $('.url-input-overlay')
@@ -162,7 +222,7 @@ $.get('/firebase', function(database){
   });
   
   $(document).on('click', '.url-input', function() {
-    
+    generateStarList();
   });
   
   dataRef.child('users').on('value', function(snapshot) {
@@ -194,6 +254,7 @@ $.get('/firebase', function(database){
     // force logged out users to relog when queue is touched
     forceRefresh();
     
+      
     for (i in queue) {
       var id = i;
       var video = queue[i];
@@ -231,16 +292,26 @@ $.get('/firebase', function(database){
         var rescueable = '<span class="rescueable ' + id + '">rescue</span>';
       }
       
+      // STAR GENERATION SCRIPT VERSION 0.2
+      // i dont even use jquery proprly, why, victor, why
       var dataForStar = 'data-link="' + escape(video.link) + '"';
       dataForStar += 'data-title="' + escape(video.name) + '"';
       dataForStar += 'data-songid="' + escape(id) + '"';
+      var starredClass = '';
+      var allStars = window.allStars
+      for (id in allStars) {
+        if (allStars[id].link === video.link) {
+          starredClass = 'star-starred';
+        }
+      }
+      var stardiv = '<div class="star star' + id + ' ' + starredClass + '" ' + dataForStar + '></div>';
       
       var isAnnouncementVideo = "http://www.youtube.com/embed/dpN3rJWlRx8" === video.link;
       if (isAnnouncementVideo) {
         var strikeAble = '';
         var announcementGray = ' announcement-gray';
       } else {
-        var strikeAble = '<div class="operators"><span class="strike ' + id + gray + '">' + strikeWord + '</span> '+rescueable+'<div class="star" ' + dataForStar + '></div></div>';
+        var strikeAble = '<div class="operators"><span class="strike ' + id + gray + '">' + strikeWord + '</span> '+rescueable+stardiv+'</div>';
         var announcementGray = '';
       }
       
