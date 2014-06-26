@@ -137,11 +137,17 @@ exports.submitVideo = function(username, videoName, linkName, callback) {
     return;
   }
 
-  var regexp = /v=([\w-]+)/;
+  var regexp = /v=([\w-_]+)/;
   var match = regexp.exec(linkName);
   var idChunk = '';
   if ((!match) || match.length < 2) {
-    var idChunk = linkName.split('/').pop();
+    var embedexp = /embed\/([\w-_]+)/;
+    var match2 = embedexp.exec(linkName);
+    if (match2 && match2.length >= 2) {
+      idChunk = match2[1];
+    } else {
+      idChunk = linkName.split('/').pop();
+    }
 // TODO: extra url checks
   } else {
     idChunk = match[1];
@@ -217,5 +223,9 @@ exports.getProgress = function(callback) {
   });
 }
 
+
 exports.findUser = firebase.findUser;
 exports.updateUserStatus = firebase.updateUserStatus;
+exports.star = firebase.star;
+exports.unstar = firebase.unstar;
+exports.getStars = firebase.getStars;

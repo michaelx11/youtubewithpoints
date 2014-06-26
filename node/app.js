@@ -88,6 +88,9 @@ app.get('/time', routes.time);
 app.get('/progress', routes.progress);
 app.get('/firebase', routes.getFirebase);
 app.get('/userstatus', routes.getUserStatus);
+app.post('/star', routes.star);
+app.post('/unstar', routes.unstar);
+app.get('/getstars', routes.getStars);
 app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/viewer',

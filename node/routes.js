@@ -158,3 +158,42 @@ exports.isLoggedIn = function(req, res) {
   res.write(loggedIn);
   res.end();
 }
+
+exports.star = function(req, res) {
+  var user = req.user.username;
+  var link = req.body.link;
+  var songId = req.body.songId;
+  var title = req.body.title;
+  if (user && link && title) {
+    model.star(user, songId, title, link, function(err) {
+      res.end();
+    });
+  } else {
+    res.end();
+  }
+}
+
+exports.unstar = function(req, res) {
+  var user = req.user.username;
+  var songId = req.body.songId;
+  if (user && songId) {
+    model.unstar(user, songId, function(err) {
+      res.end();
+    });
+  } else {
+    res.end();
+  }
+}
+
+exports.getStars = function(req, res) {
+  var user = req.user.username;
+  model.getStars(user, function(stars) {
+    if (stars) {
+      var starsJson = JSON.stringify(stars);
+      res.writeHead(200, {
+        'Content-Type': 'application/json' })
+      res.write(starsJson);
+    }
+    res.end();
+  });
+}

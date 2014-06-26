@@ -427,6 +427,73 @@ function updateUserStatus(username, newStatus, callback) {
   });
 }
 
+function star(username, songId, title, link, callback) {
+  var sanUsername = sanitizeUsername(""+username);
+  var sanSongId = sanitizeUsername(""+songId);
+  getUser(sanUsername, function(error, user) {
+    if (error) {
+      callback(error);
+      return;
+    }
+    if (user) {
+      root.child('users/' + user.id + '/stars/' + sanSongId).set({
+        'title': title,
+        'link': link,
+        'id': sanSongId
+      });
+    } else {
+      callback("User not found.");
+    }
+  });
+}
+
+function unstar(username, songId, callback) {
+  var sanUsername = sanitizeUsername(""+username);
+  var sanSongId = sanitizeUsername(""+songId);
+  getUser(sanUsername, function(error, user) {
+    if (error) {
+      callback(error);
+      return;
+    }
+    if (user) {
+      root.child('users/' + user.id + '/stars/' + sanSongId).remove(
+        function(error) {
+          if (error) {
+            callback(error);
+          } else {
+            callback(false);
+          }
+        }
+      );
+    } else {
+      callback("User not found.");
+    }
+  });
+}
+
+function getStars(username, callback) {
+  var sanUsername = sanitizeUsername(""+username);
+  getUser(sanUsername, function(error, user) {
+    if (error) {
+      callback(error);
+      return;
+    }
+    if (user) {
+      root.child('users/' + user.id + '/stars/').once('value',
+        function(data) {
+          if (!data || !data.val()) {
+            callback({});
+          } else {
+            callback(data.val());
+          }
+        }
+      );
+    } else {
+      callback({});
+    }
+  });
+}
+
 exports.createUserFb = createUserFb;
 exports.createUser = createUser;
 exports.getUser = getUser;
@@ -441,7 +508,11 @@ exports.like = like;
 exports.strike = strike;
 exports.getLikes = getLikes;
 exports.getStrikes = getStrikes;
-exports.findVideoArchive = findVideoArchive
-exports.findVideoQueue = findVideoQueue
-exports.updateUserStatus = updateUserStatus
-exports.sanitizeUsername = sanitizeUsername
+exports.findVideoArchive = findVideoArchive;
+exports.findVideoQueue = findVideoQueue;
+exports.updateUserStatus = updateUserStatus;
+exports.sanitizeUsername = sanitizeUsername;
+exports.star = star;
+exports.unstar = unstar;
+exports.getStars = getStars;
+
