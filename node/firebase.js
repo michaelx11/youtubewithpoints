@@ -435,14 +435,14 @@ function star(username, songId, title, link, callback) {
       callback(error);
       return;
     }
-    if (user) {
+    if (user && sanSongId && title && link) {
       root.child('users/' + user.id + '/stars/' + sanSongId).set({
         'title': title,
         'link': link,
         'id': sanSongId
       });
     } else {
-      callback("User not found.");
+      callback("Error starring video.");
     }
   });
 }
