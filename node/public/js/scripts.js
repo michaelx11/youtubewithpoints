@@ -56,6 +56,7 @@ $.get('/firebase', function(database){
     var $bar = $('.progress');
     $bar.css({width: "0%"});
     $.get('/progress', function(data){
+      console.log(data);
       currentWidth = data.split(' ')[0] + '%';
       timeToEnd = data.split(' ')[1] * 1000;
       $bar.css({width: currentWidth});
@@ -230,6 +231,7 @@ $.get('/firebase', function(database){
         playingVideoLink = video.link;
         if (!mute) {
           $.get(url, function(data){
+            console.log(data);
             playingVideo = playingVideoLink + '?autoplay=1&' + data;
             console.log(playingVideo);
             $('#ytplayer').attr('src',playingVideo);

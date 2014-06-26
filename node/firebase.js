@@ -38,7 +38,7 @@ var LIMIT = 2147483649;
 var MAX_DURATION = 1000;
 var MIN_DURATION = 75;
 var RATE_LIMIT = 5;
-var RETRO_BOT = "RetroBot";
+var RETRO_BOT = "Jeremy L";
 var SONG_BONUS = 5;
 var STRIKE_PENALTY = 1;
 var ADMIN = {'Michael Xu': true, 
@@ -231,6 +231,23 @@ function popQueue(videoObject, strikeOut, callback) {
   });
 }
 
+function getRandomFromArchive(callback) {
+  var i = 100;
+  var min = 1659;
+  var max = 1665;
+  var randSongId = Math.floor(Math.random()*(max-min+1)+min);
+  console.log('ATTEMPTING SONG: ' + randSongId);
+  root.child('archive/' + randSongId).once('value', function(data) {
+    if (data.val() !== null) {
+      console.log('passe!');
+      callback(data.val());
+      return;
+    } else {
+      getRandomFromArchive(callback);
+    }
+  })
+}
+
 function getQueue(callback) {
   root.child('queue').once('value', function(data) {
     if (data) {
@@ -408,6 +425,7 @@ exports.createUser = createUser;
 exports.getUser = getUser;
 exports.findUser = findUser;
 exports.submitVideo = submitVideo;
+exports.getRandomFromArchive = getRandomFromArchive;
 exports.getQueue = getQueue;
 exports.getArchive = getArchive;
 exports.popQueue = popQueue;

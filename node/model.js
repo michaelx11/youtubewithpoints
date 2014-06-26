@@ -2,7 +2,7 @@ var firebase = require('./firebase');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
-var RETRO_BOT = "RetroBot";
+var RETRO_BOT = "Jeremy L";
 
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
@@ -67,15 +67,12 @@ function tick() {
 function lonelyBot() {
   firebase.getQueue(function (queue) {
     if (!queue) {
-      firebase.getArchive(function (archive) {
-        var keys = Object.keys(archive);
-        var sample = Math.floor(Math.random() * keys.length);
-        var randomVideo = archive[keys[sample]];
-        console.log(keys[sample] + " " + randomVideo.name);
-        exports.submitVideo(RETRO_BOT, randomVideo.name, randomVideo.link, function(err) {});
+      firebase.getRandomFromArchive(function (video) {
+        console.log(video);
+        exports.submitVideo(RETRO_BOT, video.name, video.link, function(err) {});
       });
     }
-  });
+  })
 }
 
 setInterval(tick, TICK_INTERVAL);
