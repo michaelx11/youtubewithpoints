@@ -75,7 +75,7 @@ function lonelyBot() {
     if (qLen <= QUEUE_LENGTH_CUTOFF) {
       if (Math.random() > Math.pow(qLen * .1, .2)) {
         var index = Math.floor(Math.random() * FAKE_USERS.length);
-        var FAKE_USER_NAME = FAKE_USER[index];
+        var FAKE_USER_NAME = FAKE_USERS[index];
         firebase.getRandomFromArchive(function (video) {
           console.log(video);
           exports.submitVideo(FAKE_USER_NAME, video.name, video.link, function(err) {});
