@@ -77,12 +77,20 @@ h3 {
   border-bottom: 1px solid #ddd;
 }
 
+.playlist-item:hover {
+  cursor: pointer;
+}
+
 .announcement-gray {
   color: #7d7d7d;
 }
 
 .playlist-item:hover .operators {
   display: block;
+}
+
+.playlist-item:hover .star {
+  display: inline-block;
 }
 
 .operators {
@@ -99,6 +107,20 @@ h3 {
 
 .strike:hover, .rescueable:hover{
   cursor: pointer;
+}
+
+.star {
+  height: 20px;
+  width: 20px;
+  float: left;
+  margin-right: 10px;
+  background-image: url('../images/stars.png');
+  background-size: 200%;
+  background-position: 21px;
+  display: none;
+}
+.star:hover {
+  background-position: 0px;
 }
 
 .playlist-item .gray-out {
@@ -140,6 +162,7 @@ h3 {
 .submit-footer-content {
   width: 700px;
   margin: 0 auto;
+  position: relative;
 }
 
 .submit-footer-btn {
@@ -159,7 +182,15 @@ h3 {
   color: #fff;
 }
 
-
+.url-input-overlay {
+  width: 566px;
+  height: 27px;
+  position: absolute;
+  top: 13px;
+  border-radius: 2px;
+  background-color: #ffde00;
+  display: none;
+}
 
 .url-input {
   outline: none;

@@ -128,6 +128,23 @@ $.get('/firebase', function(database){
     submitLink();
   });
   
+  $(document).on('click', '.star', function() {
+    var l = unescape($(this).data('link'));
+    var t = unescape($(this).data('title'));
+    var s = unescape($(this).data('songid'));
+    var url = '/star';
+    var data = {link: l, title: t, songId: s};
+    $.post(url, data, function(e) {
+      
+    }).fail(function(b, e){ 
+      console.log(e);
+      $('.url-input-overlay')
+        .stop()
+        .fadeTo(100, 0.5)
+        .fadeOut(100);
+    });
+  });
+  
   $(document).on('click', '.strike', function(){
     var id = $(this).attr('class').split(' ')[1];
     var url = '/strike';
@@ -142,6 +159,10 @@ $.get('/firebase', function(database){
     var data = {songId: id};
     $.post(url, data, function(e) {
     });
+  });
+  
+  $(document).on('click', '.url-input', function() {
+    
   });
   
   dataRef.child('users').on('value', function(snapshot) {
@@ -210,12 +231,16 @@ $.get('/firebase', function(database){
         var rescueable = '<span class="rescueable ' + id + '">rescue</span>';
       }
       
+      var dataForStar = 'data-link="' + escape(video.link) + '"';
+      dataForStar += 'data-title="' + escape(video.name) + '"';
+      dataForStar += 'data-songid="' + escape(id) + '"';
+      
       var isAnnouncementVideo = "http://www.youtube.com/embed/dpN3rJWlRx8" === video.link;
       if (isAnnouncementVideo) {
         var strikeAble = '';
         var announcementGray = ' announcement-gray';
       } else {
-        var strikeAble = '<div class="operators"><span class="strike ' + id + gray + '">' + strikeWord + '</span> '+rescueable+'</div>';
+        var strikeAble = '<div class="operators"><span class="strike ' + id + gray + '">' + strikeWord + '</span> '+rescueable+'<div class="star" ' + dataForStar + '></div></div>';
         var announcementGray = '';
       }
       
