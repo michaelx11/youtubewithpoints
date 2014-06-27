@@ -3,7 +3,9 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 
 var RETRO_BOT = "Jeremy L";
-var FAKE_USERS = [RETRO_BOT, "Evelyn K", "Ben F", "Karl L", "Jackie S", "Charles W", "Felix S", "Ralph C"];
+var FAKE_USERS = [RETRO_BOT, "Evelyn K", "Ben F", "Karl L", "Jackie S", "Charles W", "Felix S", "Ralph C", "Al T", "Samuel S", "Trevor R", "Kevin Z", "Kevin C", "Michael R", "Caroline R", 
+    "Stephanie W", "Janet C", "Bob D", "Mike B", "Carl J", "Claire S", "Eddy T", "Eric R",
+    "Bobby E", "Larry G"];
 
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
