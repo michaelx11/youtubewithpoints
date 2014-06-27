@@ -3,13 +3,13 @@ var authConfig = require('./authConfig.js');
 
 exports.initialRouter = function(req, res, next) {
   if (req.url === '/login' || req.url === '/register' || (req.url.lastIndexOf('/auth/facebook', 0) === 0) ||
-      req.url === '/loggedin') {
+      req.url === '/loggedin' || req.url === '/') {
     next();
   } else if (req.user) {
     console.log(req.user.username + " " + req.url);
     next();
   } else {
-    res.redirect('/login');
+    res.redirect('/');
   }
 };
 
@@ -17,17 +17,26 @@ exports.localStrategy = model.localStrategy;
 
 exports.findUser = model.findUser;
 
+exports.root = function(req, res) {
+  console.log("GETTING ROOT");
+  if (req.user) {
+    res.render('index.html', {user: req.user.username});
+  } else {
+    res.render("login.html");
+  }
+}
+
 exports.viewer = function(req, res) {
   if (req.user) {
     res.render('index.html', {user: req.user.username});
   } else {
-    res.redirect('/login');
+    res.redirect('/');
   }
 };
 
 exports.login = function(req, res) {
   if (req.user) {
-    res.redirect('/viewer');
+    res.redirect('/');
   } else {
     res.render('login.html');
   }
@@ -36,7 +45,7 @@ exports.login = function(req, res) {
 exports.logout = function(req, res) {
   req.session.regenerate(function() {
     req.logout();
-    res.redirect('/login');
+    res.redirect('/');
   });
 }
 
@@ -164,24 +173,18 @@ exports.star = function(req, res) {
   var link = req.body.link;
   var songId = req.body.songId;
   var title = req.body.title;
+  res.end();
   if (user && link && title) {
-    model.star(user, songId, title, link, function(err) {
-      res.end();
-    });
-  } else {
-    res.end();
+    model.star(user, songId, title, link, function(err) {});
   }
 }
 
 exports.unstar = function(req, res) {
   var user = req.user.username;
   var link = req.body.link;
+  res.end();
   if (user && link) {
-    model.unstar(user, link, function(err) {
-      res.end();
-    });
-  } else {
-    res.end();
+    model.unstar(user, link, function(err) {});
   }
 }
 

@@ -67,7 +67,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.viewer);
+app.get('/', routes.root);
 app.get('/login', routes.login);
 /*
 app.post('/login', passport.authenticate('local', {
@@ -93,8 +93,8 @@ app.post('/unstar', routes.unstar);
 app.get('/getstars', routes.getStars);
 app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { successRedirect: '/viewer',
-      failureRedirect: '/login' }))
+    passport.authenticate('facebook', { successRedirect: '/',
+      failureRedirect: '/' }))
 
 http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
