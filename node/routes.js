@@ -135,25 +135,13 @@ exports.submit = function(req, res) {
 }
 
 exports.like = function(req, res) {
-  model.like(req.user.username, req.body.songId, function(err) {
-    /*
-    if (err) {
-      res.send(err);
-    }
-    */
-    res.end();
-  });
+  res.end();
+  model.like(req.user.username, req.body.songId, function(err) {});
 }
 
 exports.strike = function(req, res) {
-  model.strike(req.user.username, req.body.songId, function(err) {
-    /*
-    if (err) {
-      res.send(err);
-    }
-    */
-    res.end();
-  });
+  res.end();
+  model.strike(req.user.username, req.body.songId, function(err) {});
 }
 
 exports.isLoggedIn = function(req, res) {
