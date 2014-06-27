@@ -40,7 +40,7 @@ var MIN_DURATION = 75;
 var RATE_LIMIT = 5;
 
 var ARCHIVE_RANGE_MIN = 1633;
-var ARCHIVE_RANGE_MAX = 1900;
+var ARCHIVE_RANGE_MAX = 2371;
 var RETRO_BOT = "Jeremy L";
 var FAKE_USERS = [RETRO_BOT, "Evelyn K", "Ben F", "Karl L", "Jackie S", "Charles W", "Felix S", "Ralph C"];
 
