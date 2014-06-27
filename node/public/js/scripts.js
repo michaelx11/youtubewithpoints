@@ -1,3 +1,4 @@
+window.location.hash = '';
 $(document).ready(function(){
 $.get('/firebase', function(database){
   var playingVideo = '';

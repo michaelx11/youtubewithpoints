@@ -18,7 +18,6 @@ exports.localStrategy = model.localStrategy;
 exports.findUser = model.findUser;
 
 exports.root = function(req, res) {
-  console.log("GETTING ROOT");
   if (req.user) {
     res.render('index.html', {user: req.user.username});
   } else {
