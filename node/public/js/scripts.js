@@ -142,6 +142,26 @@ $.get('/firebase', function(database){
       $('.scoreboard').animate({top: 1200}, 800);
       $('body').css({overflow: 'auto'});
     } else {
+    
+      dataRef.child('users').once('value', function(snapshot) {
+        var users = snapshot.val();
+        var sortable = [];
+        for (var u in users)
+          sortable.push([users[u].username, users[u].score])
+        sortable.sort(function(a, b) {return b[1] - a[1]})
+        var html = "<table>";
+        for (i in sortable) {
+          var u = getFormattedName(sortable[i][0]);
+          var s = sortable[i][1];
+          var yourself = '';
+          if (sortable[i][0] === user)
+            var yourself = 'class="yourself"';
+          html += '<tr ' + yourself + '><td>' + u + '</td><td class="points">' + s + '</td></tr>';
+        }
+        html += "</table>";
+        $('.score-container').html(html);
+      });
+    
       $('.scoreboard-footer').fadeIn();
       $('.scoreboard').animate({top: 0}, 800);
       $('body').css({overflow: 'hidden'});
@@ -243,24 +263,7 @@ $.get('/firebase', function(database){
     generateStarList();
   });
   
-  dataRef.child('users').on('value', function(snapshot) {
-    var users = snapshot.val();
-    var sortable = [];
-    for (var u in users)
-      sortable.push([users[u].username, users[u].score])
-    sortable.sort(function(a, b) {return b[1] - a[1]})
-    var html = "<table>";
-    for (i in sortable) {
-      var u = getFormattedName(sortable[i][0]);
-      var s = sortable[i][1];
-      var yourself = '';
-      if (sortable[i][0] === user)
-        var yourself = 'class="yourself"';
-      html += '<tr ' + yourself + '><td>' + u + '</td><td class="points">' + s + '</td></tr>';
-    }
-    html += "</table>";
-    $('.score-container').html(html);
-  });
+
   
   dataRef.child('queue').on('value', function(snapshot) {
     var queue = snapshot.val();
