@@ -73,8 +73,8 @@ $.get('/firebase', function(database){
   var generateStarList = function() { 
     console.log('generating...');
     var html = '';
-    $.get('/getstars', function(data) { 
-    console.log('getstar...');
+    $.get('/getstars', function(data) {
+      console.log(data);
       window.allStars = data;
       for (id in data) {
         var title = data[id].title;
@@ -167,15 +167,17 @@ $.get('/firebase', function(database){
   
   // this bit of code will be interesting
   $('.url-input').focusout(function() {
+  })
+  $(document).on('click', function(){ 
     setTimeout(function(){$('.star-list').html('')},100);
   })
   
-  
-  $(document).on('click', '.star-list-item', function() {
+  $(document).on('click', '.star-list-item', function(e) {
     var link = $(this).data('link');
     $('.url-input').val(link);
     console.log(link);
     $('.star-list').html('');
+    e.stopPropogation();
   });
   
   
@@ -193,30 +195,29 @@ $.get('/firebase', function(database){
     var l = unescape($(this).data('link'));
     var t = unescape($(this).data('title'));
     var s = unescape($(this).data('songid'));
+    e.stopPropagation();
     if ($(this).hasClass('star-starred')) {
       var url = '/unstar';
       $(this).removeClass('star-starred');
       $('.star' + s).removeClass('star-starred');
       e.stopPropagation();
     } else {
-    
-      
       // shiny effect because i want to
       $('.url-input-overlay')
         .stop()
-        .fadeTo(100, 0.3)
+        .fadeTo(100, 0.9)
         .fadeOut(400);
-        
       var url = '/star';
       $(this).addClass('star-starred');
       $('.star' + s).addClass('star-starred');
     }
     var data = {link: l, title: t, songId: s};
     $.post(url, data, function(e) {
+      console.log(url + 'just hit')
       $.get('/getstars', function(data) {
         window.allStars = data;
+        console.log(window.allStars)
       });
-      
     }).fail(function(b, e){ 
       console.log(e);
     });
