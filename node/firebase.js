@@ -50,6 +50,10 @@ var ADMIN = {'Michael Xu': true,
              'Victor Hung': true, 
              'Stephanie Yu': true};
 
+// Keep track of current active users
+userList = {};
+exports.userList = userList;
+
 function sanitizeUsername(username) {
   return username.replace(/[\[\]\.$#,]/g,'');
 }
@@ -190,6 +194,9 @@ function popQueue(videoObject, strikeOut, callback) {
     return;
   }
   root.child('queue').child(videoObject.id).remove(function() {
+    // reset user list
+    userList = {};
+
     if ('retroId' in videoObject || FAKE_USERS.indexOf(videoObject.owner) > -1) {
       callback(false);
       return;

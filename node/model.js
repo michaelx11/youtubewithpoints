@@ -229,3 +229,4 @@ exports.updateUserStatus = firebase.updateUserStatus;
 exports.star = firebase.star;
 exports.unstar = firebase.unstar;
 exports.getStars = firebase.getStars;
+exports.userList = firebase.userList;

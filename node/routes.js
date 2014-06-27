@@ -7,6 +7,7 @@ exports.initialRouter = function(req, res, next) {
     next();
   } else if (req.user) {
     console.log(req.user.username + " " + req.url);
+    model.userList[req.user.username] = true;
     next();
   } else {
     res.redirect('/');
@@ -173,6 +174,15 @@ exports.unstar = function(req, res) {
   if (user && link) {
     model.unstar(user, link, function(err) {});
   }
+}
+
+exports.getUsers = function(req, res) {
+  var userListJson = JSON.stringify(model.userList);
+  res.writeHead(200, {
+    'Content-Length': userListJson.length,
+    'Content-Type': 'text/plain' })
+  res.write(userListJson);
+  res.end();
 }
 
 exports.getStars = function(req, res) {
