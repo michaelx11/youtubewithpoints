@@ -8,7 +8,7 @@ var FAKE_USERS = [RETRO_BOT, "Evelyn K", "Ben F", "Karl L", "Jackie S", "Charles
 var timestamp = 0;
 var BUFFER_TIME = 5 * 1000;
 var TICK_INTERVAL = 2 * 1000;
-var LONELY_INTERVAL = 3 * 1000;
+var LONELY_INTERVAL = 20 * 1000;
 var DELAY_ALLOWANCE = 5;
 var QUEUE_LENGTH_CUTOFF = 8;
 
@@ -76,7 +76,7 @@ function lonelyBot() {
       qLen = Object.keys(queue).length;
     }
     if (qLen <= QUEUE_LENGTH_CUTOFF) {
-      if (Math.random() > Math.pow(qLen * .17, .12)) {
+      if (Math.random() > Math.pow(qLen * .15, .25)) {
         if (currentStreak <= 0) {
           var index = Math.floor(Math.random() * FAKE_USERS.length);
           currentUser = FAKE_USERS[index];

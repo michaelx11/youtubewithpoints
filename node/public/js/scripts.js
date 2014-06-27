@@ -316,8 +316,8 @@ $.get('/firebase', function(database){
       dataForStar += 'data-songid="' + escape(id) + '"';
       var starredClass = '';
       var allStars = window.allStars
-      for (id in allStars) {
-        if (allStars[id].link === video.link) {
+      for (idj in allStars) {
+        if (allStars[idj].link === video.link) {
           starredClass = 'star-starred';
         }
       }
