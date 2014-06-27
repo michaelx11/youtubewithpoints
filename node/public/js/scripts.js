@@ -39,11 +39,13 @@ $.get('/firebase', function(database){
   
   var toggleMute = function() {
   if (!mute) {
+      $.get('/mute');
       $('#ytplayer').attr('src','');
       $('.play0').text('');
       $('.mute-btn').css('background-position', '0px');
       mute = true;
     } else {
+      $.get('/unmute');
       $('.play0').html(PLAY_SYMBOL);
       var url = '/time';
       $.get(url, function(data){
