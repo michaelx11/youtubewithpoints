@@ -63,7 +63,6 @@ $.get('/firebase', function(database){
     var $bar = $('.progress');
     $bar.css({width: "0%"});
     $.get('/progress', function(data){
-      console.log(data);
       currentWidth = data.split(' ')[0] + '%';
       timeToEnd = data.split(' ')[1] * 1000;
       $bar.css({width: currentWidth});
@@ -72,10 +71,8 @@ $.get('/firebase', function(database){
   }
 
   var generateStarList = function() { 
-    console.log('generating...');
     var html = '';
     $.get('/getstars', function(data) {
-      console.log(data);
       window.allStars = data;
       for (id in data) {
         var title = data[id].title;
@@ -89,8 +86,8 @@ $.get('/firebase', function(database){
         dataForStar += 'data-songid="' + escape(id) + '"';
         var starredClass = '';
         var allStars = data;
-        for (id in allStars) {
-          if (allStars[id].link === link) {
+        for (idj in allStars) {
+          if (allStars[idj].link === link) {
             starredClass = 'star-starred';
           }
         }
@@ -103,7 +100,9 @@ $.get('/firebase', function(database){
         
         html += '<div class="star-list-item" data-link="'+link+'">'+stardiv+title+youtubelink+'</div>'
       }
-      $('.star-list').html(html);
+      $('.star-list')
+        .html(html)
+        .show();
     })
   }
 
@@ -136,7 +135,6 @@ $.get('/firebase', function(database){
   })
   
   $('.score-btn').on('click', function() {
-  console.log($('.scoreboard').css('top'));
     if ($('.scoreboard').css('top') == '0px') {
       $('.scoreboard-footer').fadeOut();
       $('.scoreboard').animate({top: 1200}, 800);
@@ -162,7 +160,7 @@ $.get('/firebase', function(database){
     if(e.which == 13) {
       submitLink();
     }
-    $('.star-list').html('');
+    $('.star-list').fadeOut(100);
   });
   
   
@@ -170,14 +168,13 @@ $.get('/firebase', function(database){
   $('.url-input').focusout(function() {
   })
   $(document).on('click', function(){ 
-    setTimeout(function(){$('.star-list').html('')},100);
+    setTimeout(function(){$('.star-list').fadeOut(100)},100);
   })
   
   $(document).on('click', '.star-list-item', function(e) {
     var link = $(this).data('link');
     $('.url-input').val(link);
-    console.log(link);
-    $('.star-list').html('');
+    $('.star-list').fadeOut(100);
     e.stopPropogation();
   });
   
@@ -196,12 +193,14 @@ $.get('/firebase', function(database){
     var l = unescape($(this).data('link'));
     var t = unescape($(this).data('title'));
     var s = unescape($(this).data('songid'));
-    e.stopPropagation();
+    if ($(this).parent().attr('class') === 'star-list-item') {
+      e.stopPropagation();
+    }
+    
     if ($(this).hasClass('star-starred')) {
       var url = '/unstar';
       $(this).removeClass('star-starred');
       $('.star' + s).removeClass('star-starred');
-      e.stopPropagation();
     } else {
       // shiny effect because i want to
       $('.url-input-overlay')
@@ -214,10 +213,8 @@ $.get('/firebase', function(database){
     }
     var data = {link: l, title: t, songId: s};
     $.post(url, data, function(e) {
-      console.log(url + 'just hit')
       $.get('/getstars', function(data) {
         window.allStars = data;
-        console.log(window.allStars)
       });
     }).fail(function(b, e){ 
       console.log(e);
@@ -246,7 +243,6 @@ $.get('/firebase', function(database){
   
   dataRef.child('users').on('value', function(snapshot) {
     var users = snapshot.val();
-//    console.log(users);
     var sortable = [];
     for (var u in users)
       sortable.push([users[u].username, users[u].score])
@@ -288,8 +284,6 @@ $.get('/firebase', function(database){
       }
       
       var strikes = Object.keys(video.strikes).length;
-//      console.log(strikes);
-      
       strikes -= Object.keys(video.likes).length;
       
       if (strikes > 3){
@@ -350,9 +344,7 @@ $.get('/firebase', function(database){
         playingVideoLink = video.link;
         if (!mute) {
           $.get(url, function(data){
-            console.log(data);
             playingVideo = playingVideoLink + '?autoplay=1&' + data;
-            console.log(playingVideo);
             $('#ytplayer').attr('src',playingVideo);
             generateProgressBar();
           })
