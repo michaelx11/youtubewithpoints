@@ -86,7 +86,7 @@ function lonelyBot() {
     }
     // Randomly add songs as fake users
     if (qLen <= QUEUE_LENGTH_CUTOFF) {
-      if (Math.random() > Math.pow(qLen * .15, .25)) {
+      if (Math.random() > Math.pow(qLen * .14, .27)) {
         if (currentStreak <= 0) {
           var index = Math.floor(Math.random() * FAKE_USERS.length);
           currentUser = FAKE_USERS[index];
@@ -113,12 +113,12 @@ function lonelyBot() {
           numStrikes = Object.keys(queue[key].strikes).length;
         }
         if (index == 0) {
-          if (randomValue > .96 - (.05 * numStrikes)) {
+          if (randomValue > .98 - (.05 * numStrikes)) {
             console.log(fakeStriker + " struck: " + queue[key].name);
             exports.strike(fakeStriker, key, function(err){});
           }
         } else {
-          if (randomValue > .98 - (.05 * numStrikes)) {
+          if (randomValue > .985 - (.05 * numStrikes)) {
             console.log(fakeStriker + " struck: " + queue[key].name);
             exports.strike(fakeStriker, key, function(err){});
           }
