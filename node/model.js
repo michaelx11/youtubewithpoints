@@ -29,6 +29,10 @@ function initialize() {
 }
 initialize();
 
+function isBotSong(videoObject) {
+  return FAKE_USERS.indexOf(videoObject.owner) > -1;
+}
+
 function tick() {
   firebase.getHead(function (error, minVideo, queue) {
     if (!error && !isSwitching) {
@@ -92,7 +96,30 @@ function lonelyBot() {
         });
       }
     }
-  })
+    // Randomly strike songs as fake users
+    if (qLen > 0) {
+      var sortedQueueKeys = Object.keys(queue).sort();
+      var randomValue = Math.random();
+      if (randomValue > .95) {
+        // Strike the current song
+        if (isBotSong(queue[sortedQueueKeys[0]]))
+          exports.strike(currentUser, sortedQueueKeys[0], function(err) {});
+      } else {
+        var index1 = Math.floor(Math.random() * qLen);
+        var index2 = Math.floor(Math.random() * qLen);
+        if (randomValue > .91) {
+          // Strike first song
+          if (isBotSong(queue[sortedQueueKeys[index1]]))
+            exports.strike(currentUser, sortedQueueKeys[index1], function(err) {});
+        }
+        if (randomValue > .86) {
+          // Strike the second song too
+          if (isBotSong(queue[sortedQueueKeys[index2]]))
+            exports.strike(currentUser, sortedQueueKeys[index2], function(err) {});
+        }
+      }
+    }
+  });
 }
 
 setInterval(tick, TICK_INTERVAL);
