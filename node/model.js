@@ -77,6 +77,7 @@ function lonelyBot() {
     if (queue) {
       qLen = Object.keys(queue).length;
     }
+    // Randomly add songs as fake users
     if (qLen <= QUEUE_LENGTH_CUTOFF) {
       if (Math.random() > Math.pow(qLen * .15, .25)) {
         if (currentStreak <= 0) {
