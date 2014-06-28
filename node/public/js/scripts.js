@@ -38,7 +38,7 @@ $.get('/firebase', function(database){
             $('.status-msg')
               .stop()
               .fadeIn(300)
-              .delay(2000)
+              .delay(4000)
               .fadeOut(300);
           }
         });

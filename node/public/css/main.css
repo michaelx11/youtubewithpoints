@@ -321,7 +321,8 @@ td.points {
 }
 
 .good-news {
-  color: #00c2ad !important;
+  color: #008274 !important;
+  font-weight: 500;
 }
 
 .intro {
