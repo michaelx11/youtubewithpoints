@@ -37,8 +37,10 @@ function tick() {
   firebase.getHead(function (error, minVideo, queue) {
     if (!error && !isSwitching) {
       for (var u in queue) {
+        console.log(queue);
         var tempVideo = queue[u];
         if (tempVideo.id !== minVideo.id) {
+          console.log(tempVideo);
           if (!(tempVideo.strikes === 0) && Object.keys(tempVideo.strikes).length >= 3) {
             // remove bad video
             exports.userList = {};
