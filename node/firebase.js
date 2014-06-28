@@ -197,9 +197,6 @@ function popQueue(videoObject, strikeOut, callback) {
     return;
   }
   root.child('queue').child(videoObject.id).remove(function() {
-    // reset user list
-    exports.userList = {};
-
     if ('retroId' in videoObject || FAKE_USERS.indexOf(videoObject.owner) > -1) {
       callback(false);
       return;

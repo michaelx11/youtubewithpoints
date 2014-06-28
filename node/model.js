@@ -41,6 +41,7 @@ function tick() {
         if (tempVideo.id !== minVideo.id) {
           if (!(tempVideo.strikes === 0) && Object.keys(tempVideo.strikes).length >= 3) {
             // remove bad video
+            exports.userList = {};
             firebase.popQueue(tempVideo, true, function (error) {});
           }
         }
@@ -48,6 +49,7 @@ function tick() {
       // strike out
       if (!(minVideo.strikes === 0) && Object.keys(minVideo.strikes).length >= 3) {
         isSwitching = true;
+        exports.userList = {};
         firebase.popQueue(minVideo, true, function (error) {
           if (!error) {
             // get new timestamp
@@ -62,6 +64,7 @@ function tick() {
         if (time > duration + timestamp + BUFFER_TIME) {
           isSwitching = true;
           // remove the oldest video
+          exports.userList = {};
           firebase.popQueue(minVideo, false, function (error) {
             if (!error) {
               // get new timestamp
@@ -99,23 +102,26 @@ function lonelyBot() {
     // Randomly strike songs as fake users
     if (qLen > 0) {
       var sortedQueueKeys = Object.keys(queue).sort();
-      var randomValue = Math.random();
-      if (randomValue > .95) {
-        // Strike the current song
-        if (isBotSong(queue[sortedQueueKeys[0]]))
-          exports.strike(currentUser, sortedQueueKeys[0], function(err) {});
-      } else {
-        var index1 = Math.floor(Math.random() * qLen);
-        var index2 = Math.floor(Math.random() * qLen);
-        if (randomValue > .91) {
-          // Strike first song
-          if (isBotSong(queue[sortedQueueKeys[index1]]))
-            exports.strike(currentUser, sortedQueueKeys[index1], function(err) {});
+      for (var index in sortedQueueKeys) {
+        var key = sortedQueueKeys[index];
+        var randomValue = Math.random();
+        var numStrikes = 0;
+        var userIndex = Math.floor(Math.random() * FAKE_USERS.length);
+        var fakeStriker = FAKE_USERS[userIndex];
+ 
+        if (queue[key].strikes != 0) {
+          numStrikes = Object.keys(queue[key].strikes).length;
         }
-        if (randomValue > .86) {
-          // Strike the second song too
-          if (isBotSong(queue[sortedQueueKeys[index2]]))
-            exports.strike(currentUser, sortedQueueKeys[index2], function(err) {});
+        if (index == 0) {
+          if (randomValue > .96 - (.05 * numStrikes)) {
+            console.log(fakeStriker + " struck: " + queue[key].name);
+            exports.strike(fakeStriker, key, function(err){});
+          }
+        } else {
+          if (randomValue > .98 - (.05 * numStrikes)) {
+            console.log(fakeStriker + " struck: " + queue[key].name);
+            exports.strike(fakeStriker, key, function(err){});
+          }
         }
       }
     }
