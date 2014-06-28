@@ -76,10 +76,6 @@ h3 {
   border-bottom: 1px solid #ddd;
 }
 
-.playlist-item:hover {
-  cursor: pointer;
-}
-
 .announcement-gray {
   color: #7d7d7d;
 }
@@ -446,11 +442,19 @@ a {
   margin-right: 10px;
   background-image: url('../images/stars.png');
   background-size: 200%;
-  background-position: 20px;
+  background-position: 20px 0px;
+}
+
+.star:hover {
+  background-position: 20px 20px;
 }
 
 .star-starred {
-  background-position: 0px;
+  background-position: 0px 0px;
+}
+
+.star-starred:hover {
+  background-position: 0px 20px;
 }
 
 .star-list {
@@ -481,6 +485,4 @@ a {
   border-radius: 0 0 2px 2px;
   border: none;
 }
-.in-list:hover {
-  background-position: 20px 0;
-}
+
