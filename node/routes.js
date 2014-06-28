@@ -170,9 +170,10 @@ exports.star = function(req, res) {
 exports.unstar = function(req, res) {
   var user = req.user.username;
   var link = req.body.link;
+  var songId = req.body.songId;
   res.end();
   if (user && link) {
-    model.unstar(user, link, function(err) {});
+    model.unstar(user, link, songId, function(err) {});
   }
 }
 

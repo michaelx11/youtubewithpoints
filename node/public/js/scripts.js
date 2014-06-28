@@ -23,7 +23,27 @@ $.get('/firebase', function(database){
       $('.url-input').fadeIn(300);
     });
     $.post(url, data, function(msg) {
-      if (msg !== '') {
+      console.log(msg);
+      if (msg['success']) {
+        var songId = msg['id'];
+        var songTitle = msg['songTitle'];
+        console.log('created song with ID ' + songId);
+        
+        // NOTE: this does not create listeners for songs already in the queue. perhaps
+        // something we would want to think about, if the user were to leave the page
+        dataRef.child('queue/' + songId + '/stars').on('value', function(songStars) {
+          if (songStars.val() > 0) {
+            var m = '<span class="good-news">"' + songTitle + '" was starred by another user!</span>';
+            $('.status-msg').html(m);
+            $('.status-msg')
+              .stop()
+              .fadeIn(300)
+              .delay(2000)
+              .fadeOut(300);
+          }
+        });
+        
+      } else if (msg !== '') {
         if (msg.indexOf("<") > -1) {
           msg = 'Error: Server probably restarted - please refresh your browser';
         }
@@ -33,6 +53,8 @@ $.get('/firebase', function(database){
           .fadeIn(300)
           .delay(2000)
           .fadeOut(300);
+      } else {
+        // what happened here?
       }
     });
   }
@@ -197,7 +219,7 @@ $.get('/firebase', function(database){
     var link = $(this).data('link');
     $('.url-input').val(link);
     $('.star-list').fadeOut(100);
-    e.stopPropogation();
+    e.stopPropagation();
   });
   
   

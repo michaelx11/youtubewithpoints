@@ -320,6 +320,10 @@ td.points {
   color: #666;
 }
 
+.good-news {
+  color: #00c2ad !important;
+}
+
 .intro {
   background-color: rgba(0,0,0,0.8);
   top: 0;

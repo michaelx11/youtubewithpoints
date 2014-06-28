@@ -178,10 +178,11 @@ function createVideo(owner, defaultVideoName, linkName, Id, callback) {
           'owner': owner,
           'strikes' : 0,
           'likes' : 0,
+          'stars' : 0,
           'duration' : duration,
           'id' : Id
         });
-        callback(false);
+        callback({success:true, id: Id, songTitle: title});
       } catch (e) {
         // Error retrieving vidoe metadata
         callback('Invalid youtube URL. Try a different URL?');
@@ -455,7 +456,14 @@ function star(username, songId, title, link, callback) {
             }
           }
         }
-
+        
+        root.child('queue/' + sanSongId + '/stars').once('value', function(songStars){
+          if (songStars !== null) {
+            root.child('queue/' + sanSongId + '/stars').set(songStars.val() + 1);
+            console.log(sanUsername + ' starred ' + title + '. ' + (songStars.val()+1) + ' stars in total');
+          }
+        });
+        
         root.child('users/' + user.id + '/stars/' + sanSongId).set({
           'title': title,
           'link': link,
@@ -468,14 +476,21 @@ function star(username, songId, title, link, callback) {
   });
 }
 
-function unstar(username, link, callback) {
+function unstar(username, link, songId, callback) {
   var sanUsername = sanitizeUsername(""+username);
+  var sanSongId = sanitizeUsername(""+songId);
   getUser(sanUsername, function(error, user) {
     if (error) {
       callback(error);
       return;
     }
     if (user) {
+      root.child('queue/' + sanSongId + '/stars').once('value', function(songStars){
+        if (songStars !== null) {
+          root.child('queue/' + sanSongId + '/stars').set(songStars.val() - 1);
+        }
+      });
+    
       root.child('users/' + user.id + '/stars/').once('value', 
         function(starsData) {
           if (starsData && starsData.val()) {
