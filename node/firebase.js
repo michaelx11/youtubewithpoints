@@ -455,7 +455,7 @@ function star(username, songId, title, link, callback) {
         }
         
         root.child('queue/' + sanSongId + '/stars').once('value', function(songStars){
-          if (songStars !== null) {
+          if (songStars.val() !== null) {
             root.child('queue/' + sanSongId + '/stars').set(songStars.val() + 1);
             console.log(sanUsername + ' starred ' + title + '. ' + (songStars.val()+1) + ' stars in total');
           }
@@ -482,8 +482,9 @@ function unstar(username, link, songId, callback) {
       return;
     }
     if (user) {
+      console.log(sanUsername + ' removed ' + sanSongId);
       root.child('queue/' + sanSongId + '/stars').once('value', function(songStars){
-        if (songStars !== null) {
+        if (songStars.val() !== null) {
           root.child('queue/' + sanSongId + '/stars').set(songStars.val() - 1);
         }
       });
