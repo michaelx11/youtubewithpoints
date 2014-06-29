@@ -283,6 +283,7 @@ function getArchive(callback) {
 }
 
 function findVideoArchive(linkName, callback) {
+  callback(false);
   /*
   getArchive(function(data) {
     if (data) {
