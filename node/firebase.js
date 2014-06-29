@@ -283,6 +283,7 @@ function getArchive(callback) {
 }
 
 function findVideoArchive(linkName, callback) {
+  /*
   getArchive(function(data) {
     if (data) {
       for (var vKey in data) {
@@ -297,6 +298,7 @@ function findVideoArchive(linkName, callback) {
       callback(false);
     }
   });
+  */
 }
 
 function findVideoQueue(linkName, callback) {
