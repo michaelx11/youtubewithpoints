@@ -457,7 +457,6 @@ function star(username, songId, title, link, callback) {
           }
         }
         
-        console.log('is the song still in the queue?');
         root.child('queue/' + sanSongId + '/stars').once('value', function(songStars){
           if (songStars.val() !== null) {
             root.child('queue/' + sanSongId + '/stars').set(songStars.val() + 1);
