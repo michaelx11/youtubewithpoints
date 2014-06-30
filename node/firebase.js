@@ -373,7 +373,7 @@ function submitVideo(owner, videoName, linkName, callback) {
 }
 
 function like(username, songId, callback) {
-  root.child('queue').child(songId).on('value', function(data) {
+  root.child('queue').child(songId).once('value', function(data) {
     if (data.val() !== null) {
       root.child('queue').child(songId).child('likes/' + username).set('liked');
       callback(false);
@@ -384,7 +384,7 @@ function like(username, songId, callback) {
 }
 
 function strike(username, songId, callback) {
-  root.child('queue').child(songId).on('value', function(data) {
+  root.child('queue').child(songId).once('value', function(data) {
     if (data.val() !== null) {
       root.child('queue').child(songId).child('strikes/' + username).set('striked');
       callback(false);
