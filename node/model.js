@@ -86,7 +86,7 @@ function lonelyBot() {
     }
     // Randomly add songs as fake users
     if (qLen <= QUEUE_LENGTH_CUTOFF) {
-      if (Math.random() > Math.pow(qLen * .14, .27)) {
+      if (Math.random() > Math.pow(qLen * .20, .30)) {
         if (currentStreak <= 0) {
           var index = Math.floor(Math.random() * FAKE_USERS.length);
           currentUser = FAKE_USERS[index];
@@ -129,7 +129,7 @@ function lonelyBot() {
 }
 
 setInterval(tick, TICK_INTERVAL);
-setInterval(lonelyBot, LONELY_INTERVAL);
+//setInterval(lonelyBot, LONELY_INTERVAL);
 
 exports.localStrategy = new LocalStrategy(function(username, password, callback) {
   firebase.getUser(username, function(err, user) {

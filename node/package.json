@@ -6,15 +6,17 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "bcrypt": "*",
     "express": "3.4.0",
     "firebase": "*",
+    "moment": "*",
+    "youtube-api": "*",
     "handlebars": "*",
     "hbs": "*",
     "passport": "*",
-    "passport-local": "*",
-    "bcrypt": "*",
-    "request": "*",
     "passport-facebook": "*",
+    "passport-local": "*",
+    "request": "*",
     "serve-favicon": "*"
   }
 }

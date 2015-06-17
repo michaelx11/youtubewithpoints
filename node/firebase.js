@@ -5,6 +5,9 @@ var authConfig = require('./authConfig');
 var root = new Firebase(authConfig.firebaseURL);
 root.auth(authConfig.firebaseSecret);
 var http = require('http');
+var youtube = require('./youtube');
+// parse iso8601 duration strings
+var moment = require('moment');
 
 /*
  * Schema
@@ -37,7 +40,7 @@ var http = require('http');
 var LIMIT = 2147483649;
 var MAX_DURATION = 1000;
 var MIN_DURATION = 75;
-var RATE_LIMIT = 5;
+var RATE_LIMIT = 10;
 
 var ARCHIVE_RANGE_MIN = 1633;
 var ARCHIVE_RANGE_MAX = 2671;
@@ -134,35 +137,15 @@ function findUser(id, callback) {
   });
 }
 
-function getVideoData(linkName, callback) {
-  var id = linkName.split("/").pop();
-  http.get(
-      "http://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=jsonc",
-      function(res) {
-        var output = "";
-        res.setEncoding("utf8");
-        res.on("data", function(chunk) {
-          output += chunk;
-        });
-        res.on("end", function() {
-          callback(false, output);
-        });
-      }).on('error', function(e) {
-        callback("Error: " + e.message, "");
-      });
-}
-
 function createVideo(owner, defaultVideoName, linkName, Id, callback) {
-  getVideoData(linkName, function (error, chunk) {
+  var id = linkName.split("/").pop();
+  youtube.getVideoData(id, function (error, data) {
     if (error) {
       callback(error);
     } else {
       try {
-        var bodychunk = "";
-          bodychunk = JSON.parse(chunk);
-        var data = bodychunk.data;
-        var title = data.title;
-        var duration = parseInt(data.duration);
+        var title = data.snippet.title;
+        var duration = moment.duration(data.contentDetails.duration).asMilliseconds() / 1000;
         if (duration > MAX_DURATION) {
           callback("Video too long.");
           return;
